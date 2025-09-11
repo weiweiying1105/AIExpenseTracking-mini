@@ -1,0 +1,173 @@
+.profile-container {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding-bottom: 200rpx;
+}
+
+/* 用户信息区域 */
+.user-section {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 80rpx 40rpx 60rpx;
+  border-radius: 0 0 40rpx 40rpx;
+  margin-bottom: 40rpx;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 60rpx;
+}
+
+.avatar-container {
+  position: relative;
+  margin-right: 30rpx;
+}
+
+.avatar .avatar-image{
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #ff9a9e, #fecfef);
+  border: 6rpx solid rgba(255, 255, 255, 0.3);
+}
+
+.vip-badge {
+  position: absolute;
+  top: -10rpx;
+  right: -10rpx;
+  background: #ff6b6b;
+  color: white;
+  font-size: 20rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 16rpx;
+  font-weight: bold;
+}
+
+.user-details {
+  flex: 1;
+}
+
+.username {
+  display: block;
+  color: white;
+  font-size: 36rpx;
+  font-weight: bold;
+  margin-bottom: 10rpx;
+}
+
+.user-subtitle {
+  display: block;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 24rpx;
+}
+
+/* 积分统计区域 */
+.stats-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 30rpx;
+  padding: 40rpx;
+  backdrop-filter: blur(10px);
+}
+
+.stat-item {
+  text-align: center;
+  flex: 1;
+}
+
+.stat-number {
+  display: block;
+  color: white;
+  font-size: 48rpx;
+  font-weight: bold;
+  margin-bottom: 10rpx;
+}
+
+.stat-label {
+  display: block;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 24rpx;
+}
+
+.stat-divider {
+  width: 2rpx;
+  height: 60rpx;
+  background: rgba(255, 255, 255, 0.3);
+  margin: 0 40rpx;
+}
+
+/* 功能菜单区域 */
+.menu-section {
+  background: white;
+  border-radius: 30rpx;
+  margin: 0 40rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.1);
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 36rpx 40rpx;
+  border-bottom: 2rpx solid #f0f0f0;
+  transition: background-color 0.2s;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+  
+  &:active {
+    background-color: #f8f8f8;
+  }
+}
+
+.menu-icon {
+  width: 48rpx;
+  height: 48rpx;
+  margin-right: 30rpx;
+  border-radius: 12rpx;
+  
+  &.orders-icon {
+    background: linear-gradient(45deg, #ffeaa7, #fab1a0);
+  }
+  
+  &.wallet-icon {
+    background: linear-gradient(45deg, #74b9ff, #0984e3);
+  }
+  
+  &.health-icon {
+    background: linear-gradient(45deg, #fd79a8, #e84393);
+  }
+  
+  &.user-icon {
+    background: linear-gradient(45deg, #a29bfe, #6c5ce7);
+  }
+  
+  &.feedback-icon {
+    background: linear-gradient(45deg, #fdcb6e, #e17055);
+  }
+  
+  &.help-icon {
+    background: linear-gradient(45deg, #55efc4, #00b894);
+  }
+  
+  &.cooperation-icon {
+    background: linear-gradient(45deg, #ff7675, #d63031);
+  }
+}
+
+.menu-text {
+  flex: 1;
+  color: #333;
+  font-size: 32rpx;
+}
+
+.menu-arrow {
+  width: 16rpx;
+  height: 16rpx;
+  border-top: 4rpx solid #ccc;
+  border-right: 4rpx solid #ccc;
+  transform: rotate(45deg);
+}
