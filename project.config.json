@@ -7,7 +7,7 @@
     "urlCheck": true,
     "es6": false,
     "enhance": false,
-    "compileHotReLoad": false,
+    "compileHotReLoad": true,
     "postcss": false,
     "preloadBackgroundData": false,
     "minified": false,
@@ -16,10 +16,25 @@
     "coverView": true,
     "showShadowRootInWxmlPanel": false,
     "scopeDataCheck": false,
-    "useCompilerModule": false
+    "useCompilerModule": false,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    }
   },
   "compileType": "miniprogram",
   "simulatorType": "wechat",
   "simulatorPluginLibVersion": {},
-  "condition": {}
+  "condition": {},
+  "libVersion": "3.9.2",
+  "srcMiniprogramRoot": "dist/",
+  "packOptions": {
+    "ignore": [],
+    "include": []
+  },
+  "editorSetting": {
+    "tabIndent": "insertSpaces",
+    "tabSize": 2
+  }
 }

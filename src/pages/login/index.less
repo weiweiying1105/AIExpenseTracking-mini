@@ -1,0 +1,138 @@
+.login-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60rpx 40rpx 40rpx;
+  box-sizing: border-box;
+}
+
+.login-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 120rpx;
+  margin-bottom: 100rpx;
+
+  .logo {
+    width: 120rpx;
+    height: 120rpx;
+    border-radius: 24rpx;
+    margin-bottom: 32rpx;
+    background: #fff;
+    box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.1);
+  }
+
+  .app-name {
+    font-size: 48rpx;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 16rpx;
+    text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.2);
+  }
+
+  .app-desc {
+    font-size: 28rpx;
+    color: rgba(255, 255, 255, 0.8);
+    text-align: center;
+  }
+}
+
+.login-content {
+  width: 100%;
+  max-width: 600rpx;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.user-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 60rpx;
+  padding: 40rpx;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 24rpx;
+  backdrop-filter: blur(10rpx);
+
+  .avatar {
+    width: 100rpx;
+    height: 100rpx;
+    border-radius: 50%;
+    margin-bottom: 20rpx;
+    border: 4rpx solid rgba(255, 255, 255, 0.3);
+  }
+
+  .nickname {
+    font-size: 32rpx;
+    color: #fff;
+    font-weight: 500;
+  }
+}
+
+.login-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+  margin-bottom: 60rpx;
+
+  .wx-login-btn {
+    height: 88rpx;
+    background: #07c160;
+    color: #fff;
+    border: none;
+    border-radius: 44rpx;
+    font-size: 32rpx;
+    font-weight: 500;
+    box-shadow: 0 8rpx 24rpx rgba(7, 193, 96, 0.3);
+    transition: all 0.3s ease;
+
+    &:active {
+      transform: translateY(2rpx);
+      box-shadow: 0 4rpx 12rpx rgba(7, 193, 96, 0.3);
+    }
+
+    &.button-loading {
+      background: rgba(7, 193, 96, 0.7);
+    }
+  }
+
+  .guest-btn {
+    height: 88rpx;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: 2rpx solid rgba(255, 255, 255, 0.3);
+    border-radius: 44rpx;
+    font-size: 32rpx;
+    backdrop-filter: blur(10rpx);
+    transition: all 0.3s ease;
+
+    &:active {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(2rpx);
+    }
+  }
+}
+
+.login-tips {
+  text-align: center;
+  margin-top: auto;
+  padding-top: 40rpx;
+
+  .tip-text {
+    font-size: 24rpx;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.5;
+  }
+}
+
+/* 适配不同屏幕尺寸 */
+@media screen and (max-height: 600px) {
+  .login-header {
+    margin-top: 60rpx;
+    margin-bottom: 60rpx;
+  }
+}
