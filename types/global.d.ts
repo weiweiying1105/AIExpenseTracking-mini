@@ -19,4 +19,7 @@ declare namespace NodeJS {
   }
 }
 
+// 全局常量声明
+declare const API_BASE_URL: string
+
 

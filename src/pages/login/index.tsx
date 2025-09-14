@@ -24,7 +24,6 @@ interface LoginResponse {
 
 const Login: React.FC = () => {
   const [loading, setLoading] = useState(false)
-  const [userInfo, setUserInfo] = useState<UserInfo | null>(null)
 
   useEffect(() => {
     // 检查是否已经登录
@@ -48,7 +47,7 @@ const Login: React.FC = () => {
   const callLoginApi = async (loginData: { code: string; nickName?: string; avatarUrl?: string }): Promise<LoginResponse> => {
     return new Promise((resolve, reject) => {
       Taro.request({
-        url: `${process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://your-api-domain.com'}/api/auth/login`,
+        url: `${API_BASE_URL}/auth/login`,
         method: 'POST',
         data: loginData,
         header: {
@@ -130,57 +129,7 @@ const Login: React.FC = () => {
     }
   }
 
-  // 获取用户信息（单独的按钮）
-  const handleGetUserInfo = () => {
-    Taro.getUserProfile({
-      desc: '用于完善用户资料',
-      success: (res) => {
-        const { nickName, avatarUrl } = res.userInfo
-        setUserInfo({ nickName, avatarUrl })
 
-        // 更新本地存储的用户信息
-        const savedUserInfo = Taro.getStorageSync('userInfo')
-        if (savedUserInfo) {
-          Taro.setStorageSync('userInfo', {
-            ...savedUserInfo,
-            nickName,
-            avatarUrl
-          })
-        }
-
-        Taro.showToast({
-          title: '获取用户信息成功',
-          icon: 'success'
-        })
-      },
-      fail: (err) => {
-        console.error('获取用户信息失败:', err)
-        Taro.showToast({
-          title: '获取用户信息失败',
-          icon: 'none'
-        })
-      }
-    })
-  }
-
-  // 游客模式
-  const handleGuestMode = () => {
-    Taro.showModal({
-      title: '提示',
-      content: '游客模式下部分功能受限，建议登录后使用完整功能',
-      confirmText: '继续',
-      cancelText: '取消',
-      success: (res) => {
-        if (res.confirm) {
-          // 设置游客标识
-          Taro.setStorageSync('isGuest', true)
-          Taro.switchTab({
-            url: '/pages/index/index'
-          })
-        }
-      }
-    })
-  }
 
   return (
     <View className='login-container'>
@@ -193,17 +142,6 @@ const Login: React.FC = () => {
       </View>
 
       <View className='login-content'>
-        {userInfo && (
-          <View className='user-preview'>
-            <Image
-              className='avatar'
-              src={userInfo.avatarUrl}
-              mode='aspectFill'
-            />
-            <Text className='nickname'>{userInfo.nickName}</Text>
-          </View>
-        )}
-
         <View className='login-buttons'>
           <Button
             className='wx-login-btn'
@@ -214,23 +152,8 @@ const Login: React.FC = () => {
             {loading ? '登录中...' : '微信快速登录'}
           </Button>
 
-          {/* 只有在已登录后才显示获取用户信息按钮 */}
-          {Taro.getStorageSync('token') && !userInfo && (
-            <Button
-              className='profile-btn'
-              onClick={handleGetUserInfo}
-            >
-              完善个人信息
-            </Button>
-          )}
 
-          <Button
-            className='guest-btn'
-            onClick={handleGuestMode}
-            disabled={loading}
-          >
-            游客模式
-          </Button>
+
         </View>
 
         <View className='login-tips'>

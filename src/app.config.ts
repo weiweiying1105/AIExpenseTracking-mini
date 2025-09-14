@@ -4,7 +4,8 @@ export default {
     "pages/accounting/index",
     "pages/statistics/index",
     "pages/index/index",
-    "pages/login/index"
+    "pages/login/index",
+    "pages/setUserInfo/index",
   ],
   window: {
     backgroundTextStyle: "light",

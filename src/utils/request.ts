@@ -1,4 +1,3 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import Taro from '@tarojs/taro'
 
 // 定义响应数据接口
@@ -8,66 +7,85 @@ interface ApiResponse<T = any> {
   data: T
 }
 
+// 定义请求配置接口
+interface RequestConfig {
+  url: string
+  method?: 'GET' | 'POST' | 'PUT' | 'DELETE'
+  data?: any
+  header?: Record<string, string>
+  timeout?: number
+}
+
 // 状态码枚举
 enum ResponseCode {
   SUCCESS = 200,
-  UNAUTHORIZED = 401,
-  FORBIDDEN = 403,
-  NOT_FOUND = 404,
-  SERVER_ERROR = 500,
-  TOKEN_EXPIRED = 1001,
-  INVALID_PARAMS = 1002
+  UNAUTHORIZED = 401,// 未授权
+  FORBIDDEN = 403, // 禁止访问
+  NOT_FOUND = 404, // 资源不存在
+  SERVER_ERROR = 500, // 服务器错误
+  TOKEN_EXPIRED = 1001, // token过期
+  INVALID_PARAMS = 1002 // 参数无效
 }
 
-// 创建axios实例
-const request: AxiosInstance = axios.create({
-  baseURL: process.env.NODE_ENV === 'development' 
-    ? 'http://localhost:3000/api' 
-    : 'https://your-api-domain.com/api',
-  timeout: 10000,
-  headers: {
-    'Content-Type': 'application/json'
-  }
-})
+// 基础配置
+const BASE_URL = process.env.NODE_ENV === 'development'
+  ? 'http://localhost:3000/api'
+  : 'https://your-api-domain.com/api'
 
-// 请求拦截器
-request.interceptors.request.use(
-  (config: AxiosRequestConfig) => {
-    // 添加token
-    const token = Taro.getStorageSync('token')
-    if (token && config.headers) {
-      config.headers.Authorization = `Bearer ${token}`
-    }
-    
-    // 显示加载提示
-    Taro.showLoading({
-      title: '加载中...',
-      mask: true
+const DEFAULT_TIMEOUT = 10000
+const token = Taro.getStorageSync('token') || ''
+// 封装的请求函数
+const request = async <T = any>(config: RequestConfig): Promise<T> => {
+  // 添加token到请求头
+
+  const header: Record<string, string> = {
+    'Content-Type': 'application/json',
+    ...config.header
+  }
+
+  if (token) {
+    header.Authorization = `Bearer ${token}`
+  }
+
+  // 显示加载提示
+  Taro.showLoading({
+    title: '加载中...',
+    mask: true
+  })
+
+  try {
+    const response = await Taro.request({
+      url: `${BASE_URL}${config.url}`,
+      method: config.method || 'GET',
+      data: config.data,
+      header,
+      timeout: config.timeout || DEFAULT_TIMEOUT
     })
-    
-    return config
-  },
-  (error) => {
-    Taro.hideLoading()
-    return Promise.reject(error)
-  }
-)
 
-// 响应拦截器
-// 在响应拦截器中添加token刷新逻辑
-request.interceptors.response.use(
-  (response: AxiosResponse<ApiResponse>) => {
     Taro.hideLoading()
-    const { code, message, data } = response.data
-    
+
+    const { statusCode, data } = response
+
+    // 处理HTTP状态码
+    if (statusCode === 401) {
+      return handleTokenRefresh(config)
+    }
+
+    if (statusCode !== 200) {
+      throw new Error(`HTTP ${statusCode}: 请求失败`)
+    }
+
+    // 处理业务状态码
+    const apiResponse = data as ApiResponse
+    const { code, message, data: responseData } = apiResponse
+
     switch (code) {
       case ResponseCode.SUCCESS:
-        return data
-        
+        return responseData
+
       case ResponseCode.TOKEN_EXPIRED:
-        // token过期，尝试刷新token
-        return handleTokenRefresh(response.config)
-        
+        return handleTokenRefresh(config)
+
       case ResponseCode.UNAUTHORIZED:
         // token过期或未授权，清除本地存储并跳转到登录页
         Taro.removeStorageSync('token')
@@ -77,95 +95,107 @@ request.interceptors.response.use(
           icon: 'none',
           duration: 2000
         })
-        // 跳转到登录页面或显示登录弹窗
         setTimeout(() => {
           Taro.switchTab({
             url: '/pages/profile/index'
           })
         }, 2000)
-        return Promise.reject(new Error(message || '登录已过期'))
-        
+        throw new Error(message || '登录已过期')
+
       case ResponseCode.FORBIDDEN:
         Taro.showToast({
           title: message || '没有权限访问',
           icon: 'none'
         })
-        return Promise.reject(new Error(message || '没有权限访问'))
-        
+        throw new Error(message || '没有权限访问')
+
       case ResponseCode.NOT_FOUND:
         Taro.showToast({
           title: message || '请求的资源不存在',
           icon: 'none'
         })
-        return Promise.reject(new Error(message || '请求的资源不存在'))
-        
+        throw new Error(message || '请求的资源不存在')
+
       case ResponseCode.INVALID_PARAMS:
         Taro.showToast({
           title: message || '参数错误',
           icon: 'none'
         })
-        return Promise.reject(new Error(message || '参数错误'))
-        
+        throw new Error(message || '参数错误')
+
       case ResponseCode.SERVER_ERROR:
         Taro.showToast({
           title: message || '服务器错误',
           icon: 'none'
         })
-        return Promise.reject(new Error(message || '服务器错误'))
-        
+        throw new Error(message || '服务器错误')
+
       default:
-        // 其他错误码
         if (code !== ResponseCode.SUCCESS) {
           Taro.showToast({
             title: message || '请求失败',
             icon: 'none'
           })
-          return Promise.reject(new Error(message || '请求失败'))
+          throw new Error(message || '请求失败')
         }
-        return data
+        return responseData
     }
-  },
-  (error) => {
+  } catch (error: any) {
     Taro.hideLoading()
-    
-    // 如果是401错误，也尝试刷新token
-    if (error.response?.status === 401) {
-      return handleTokenRefresh(error.config)
+
+    // 网络错误处理
+    if (error.errMsg) {
+      Taro.showToast({
+        title: '网络请求失败',
+        icon: 'none'
+      })
     }
-    
-    return Promise.reject(error)
+
+    throw error
   }
-)
+}
 
 // token刷新处理
-const handleTokenRefresh = async (originalRequest: any) => {
+const handleTokenRefresh = async <T = any>(originalRequest: RequestConfig): Promise<T> => {
   const oldToken = Taro.getStorageSync('token')
-  
+
   if (!oldToken) {
     // 没有token，跳转登录
     redirectToLogin()
-    return Promise.reject(new Error('请先登录'))
+    throw new Error('请先登录')
   }
-  
+
   try {
     // 调用刷新token接口
-    const refreshResponse = await axios.post('/auth/refresh', {
-      token: oldToken
+    const refreshResponse = await Taro.request({
+      url: `${BASE_URL}/auth/refresh`,
+      method: 'POST',
+      data: { token: oldToken },
+      header: { 'Content-Type': 'application/json' }
     })
-    
-    const newToken = refreshResponse.data.data.token
-    Taro.setStorageSync('token', newToken)
-    
-    // 重新发送原始请求
-    originalRequest.headers.Authorization = `Bearer ${newToken}`
-    return axios(originalRequest)
-    
+
+    if (refreshResponse.statusCode === 200) {
+      const newToken = refreshResponse.data.data.token
+      Taro.setStorageSync('token', newToken)
+
+      // 重新发送原始请求
+      const newConfig = {
+        ...originalRequest,
+        header: {
+          ...originalRequest.header,
+          Authorization: `Bearer ${newToken}`
+        }
+      }
+      return request(newConfig)
+    } else {
+      throw new Error('刷新token失败')
+    }
   } catch (refreshError) {
     // 刷新失败，清除本地数据并跳转登录
     Taro.removeStorageSync('token')
     Taro.removeStorageSync('userInfo')
     redirectToLogin()
-    return Promise.reject(refreshError)
+    throw refreshError
   }
 }
 
@@ -174,7 +204,7 @@ const redirectToLogin = () => {
     title: '登录已过期，请重新登录',
     icon: 'none'
   })
-  
+
   setTimeout(() => {
     Taro.switchTab({
       url: '/pages/profile/index'
@@ -187,19 +217,37 @@ export default request
 
 // 导出常用的请求方法
 export const get = <T = any>(url: string, params?: any): Promise<T> => {
-  return request.get(url, { params })
+  const config: RequestConfig = {
+    url: params ? `${url}?${new URLSearchParams(params).toString()}` : url,
+    method: 'GET'
+  }
+  return request<T>(config)
 }
 
 export const post = <T = any>(url: string, data?: any): Promise<T> => {
-  return request.post(url, data)
+  const config: RequestConfig = {
+    url,
+    method: 'POST',
+    data
+  }
+  return request<T>(config)
 }
 
 export const put = <T = any>(url: string, data?: any): Promise<T> => {
-  return request.put(url, data)
+  const config: RequestConfig = {
+    url,
+    method: 'PUT',
+    data
+  }
+  return request<T>(config)
 }
 
 export const del = <T = any>(url: string): Promise<T> => {
-  return request.delete(url)
+  const config: RequestConfig = {
+    url,
+    method: 'DELETE'
+  }
+  return request<T>(config)
 }
 
 // 导出响应码枚举

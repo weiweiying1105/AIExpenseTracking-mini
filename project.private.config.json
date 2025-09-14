@@ -9,6 +9,13 @@
     "miniprogram": {
       "list": [
         {
+          "name": "pages/setUserInfo/index",
+          "pathName": "pages/setUserInfo/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "pages/login/index",
           "pathName": "pages/login/index",
           "query": "",

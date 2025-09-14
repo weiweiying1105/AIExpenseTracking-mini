@@ -3,6 +3,7 @@ import Taro from '@tarojs/taro'
 import './index.less'
 import { useState, useEffect } from 'react'
 import { userApi } from '../../utils/api'
+import { getUserInfo } from 'src/api/user'
 
 const Profile = () => {
   const [userInfo, setUserInfo] = useState({
@@ -19,6 +20,11 @@ const Profile = () => {
         ...savedUserInfo,
         isLogin: true
       })
+    }else{
+      getUserInfo().then(res=>{
+         setUserInfo(res)
+      })
+    
     }
   }, [])
 
@@ -71,12 +77,7 @@ const Profile = () => {
     }
   }
 
-  const handleUserManagement = () => {
-    Taro.showToast({
-      title: '用户管理功能开发中',
-      icon: 'none'
-    })
-  }
+
 
   const handleFeedback = () => {
     Taro.showToast({
@@ -98,12 +99,18 @@ const Profile = () => {
       icon: 'none'
     })
   }
+  // 跳转设置用户信息
+  const handleUserInfo = () => {
+    Taro.navigateTo({
+      url: '/pages/setUserInfo/index'
+    })
+  }
 
   return (
     <View className='profile-container'>
       {/* 顶部用户信息区域 */}
       <View className='user-section'>
-        <View className='user-info' onClick={userInfo.isLogin ? handleUserManagement : handleLogin}>
+        <View className='user-info' onClick={userInfo.isLogin ? handleUserInfo : handleLogin}>
           <View className='avatar-container'>
             <View className='avatar'>
               <Image className='avatar-image' src={userInfo.avatarUrl} />
@@ -134,11 +141,6 @@ const Profile = () => {
       <View className='menu-section'>
 
 
-        <View className='menu-item' onClick={handleUserManagement}>
-          <View className='menu-icon user-icon'></View>
-          <Text className='menu-text'>用户管理</Text>
-          <View className='menu-arrow'></View>
-        </View>
 
         <View className='menu-item' onClick={handleFeedback}>
           <View className='menu-icon feedback-icon'></View>

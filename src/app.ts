@@ -3,10 +3,16 @@ import { Component } from 'react'
 import type { PropsWithChildren } from 'react'
 
 import './app.less'
+import { get } from './utils/request'
+import Taro from '@tarojs/taro'
 
 class App extends Component<PropsWithChildren> {
 
-  componentDidMount() { }
+  componentDidMount() {
+    get('/user/info').then(res => {
+      Taro.setStorageSync('userInfo', res.data)
+    })
+  }
 
   componentDidShow() { }
 
