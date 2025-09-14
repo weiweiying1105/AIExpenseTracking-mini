@@ -11,6 +11,14 @@ const Profile = () => {
     nickName: '点击登录',
     isLogin: false
   })
+  useEffect(() => {  const savedUserInfo = Taro.getStorageSync('userInfo')
+    if (savedUserInfo) {
+      setUserInfo({
+        ...savedUserInfo,
+        isLogin: true
+      })
+    }
+  })
 
   useEffect(() => {
     // 检查是否已经登录

@@ -2,16 +2,61 @@
 /// <reference types="@taro-hooks/plugin-react" />
 import '@taro-hooks/plugin-react';
 
-declare module '*.png';
-declare module '*.gif';
-declare module '*.jpg';
-declare module '*.jpeg';
-declare module '*.svg';
-declare module '*.css';
-declare module '*.less';
-declare module '*.scss';
-declare module '*.sass';
-declare module '*.styl';
+// 图片资源模块声明
+declare module '*.png' {
+  const src: string;
+  export default src;
+}
+declare module '*.gif' {
+  const src: string;
+  export default src;
+}
+declare module '*.jpg' {
+  const src: string;
+  export default src;
+}
+declare module '*.jpeg' {
+  const src: string;
+  export default src;
+}
+declare module '*.svg' {
+  const src: string;
+  export default src;
+}
+declare module '*.webp' {
+  const src: string;
+  export default src;
+}
+declare module '*.ico' {
+  const src: string;
+  export default src;
+}
+declare module '*.bmp' {
+  const src: string;
+  export default src;
+}
+
+// 样式文件模块声明
+declare module '*.css' {
+  const classes: { [key: string]: string };
+  export default classes;
+}
+declare module '*.less' {
+  const classes: { [key: string]: string };
+  export default classes;
+}
+declare module '*.scss' {
+  const classes: { [key: string]: string };
+  export default classes;
+}
+declare module '*.sass' {
+  const classes: { [key: string]: string };
+  export default classes;
+}
+declare module '*.styl' {
+  const classes: { [key: string]: string };
+  export default classes;
+}
 
 declare namespace NodeJS {
   interface ProcessEnv {

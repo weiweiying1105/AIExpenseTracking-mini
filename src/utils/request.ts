@@ -206,8 +206,8 @@ const redirectToLogin = () => {
   })
 
   setTimeout(() => {
-    Taro.switchTab({
-      url: '/pages/profile/index'
+    Taro.navigateTo({
+      url: '/pages/login/index'
     })
   }, 1500)
 }

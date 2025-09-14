@@ -109,8 +109,8 @@ const Login: React.FC = () => {
 
         // 4. 跳转到首页
         setTimeout(() => {
-          Taro.switchTab({
-            url: '/pages/index/index'
+          Taro.navigateBack({
+            delta: 1
           })
         }, 1500)
       } else {

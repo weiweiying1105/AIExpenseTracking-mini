@@ -10,6 +10,7 @@ import { View, Button, Text, Image, Input } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import './index.less'
 import {get, put} from 'src/utils/request'
+import { getUserInfo } from 'src/api/user'
 interface UserInfo {
   nickName?: string
   avatarUrl?: string
@@ -39,11 +40,8 @@ const SetUserInfo: React.FC = () => {
         avatarUrl: savedUserInfo.avatarUrl
       })
     }else{
-      get('/user/info').then(res => {
-        setUserInfo({
-          nickName: res.data.nickName,
-          avatarUrl: res.data.avatarUrl
-        })
+      getUserInfo().then(res=>{
+        setUserInfo(res)
       })
     }
   }, [])
