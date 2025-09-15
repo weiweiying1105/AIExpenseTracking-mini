@@ -32,7 +32,7 @@ const BASE_URL = process.env.NODE_ENV === 'development'
   ? 'http://localhost:3000/api'
   : 'https://your-api-domain.com/api'
 
-const DEFAULT_TIMEOUT = 10000
+const DEFAULT_TIMEOUT = 300000
 const token = Taro.getStorageSync('token') || ''
 // 封装的请求函数
 const request = async <T = any>(config: RequestConfig): Promise<T> => {

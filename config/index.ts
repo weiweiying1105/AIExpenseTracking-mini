@@ -18,7 +18,7 @@ export default defineConfig<'webpack5'>(async (merge, { command, mode }) => {
     sourceRoot: 'src',
     outputRoot: 'dist',
     plugins: [
-       '@taro-hooks/plugin-react' 
+      '@taro-hooks/plugin-react'
     ],
     defineConstants: {
     },
@@ -31,7 +31,7 @@ export default defineConfig<'webpack5'>(async (merge, { command, mode }) => {
     framework: 'react',
     compiler: {
       type: 'webpack5',
-      prebundle: { 
+      prebundle: {
         enable: false,
         exclude: ['react-dom']  // 排除有问题的模块
       }
@@ -41,26 +41,29 @@ export default defineConfig<'webpack5'>(async (merge, { command, mode }) => {
     },
     mini: {
       postcss: {
-          pxtransform: {
-            enable: true,
-            config: {
+        // 开启 Tailwind
+        tailwindcss: {},
+        autoprefixer: {},
+        pxtransform: {
+          enable: true,
+          config: {
 
-            }
-          },
-          url: {
-            enable: true,
-            config: {
-              limit: 1024 // 设定转换尺寸上限
-            }
-          },
-          cssModules: {
-            enable: false, // 默认为 false，如需使用 css modules 功能，则设为 true
-            config: {
-              namingPattern: 'module', // 转换模式，取值为 global/module
-              generateScopedName: '[name]__[local]___[hash:base64:5]'
-            }
           }
         },
+        url: {
+          enable: true,
+          config: {
+            limit: 1024 // 设定转换尺寸上限
+          }
+        },
+        cssModules: {
+          enable: false, // 默认为 false，如需使用 css modules 功能，则设为 true
+          config: {
+            namingPattern: 'module', // 转换模式，取值为 global/module
+            generateScopedName: '[name]__[local]___[hash:base64:5]'
+          }
+        }
+      },
       webpackChain(chain) {
         chain.resolve.plugin('tsconfig-paths').use(TsconfigPathsPlugin)
       }
@@ -74,18 +77,18 @@ export default defineConfig<'webpack5'>(async (merge, { command, mode }) => {
         chunkFilename: 'css/[name].[chunkhash].css'
       },
       postcss: {
-          autoprefixer: {
-            enable: true,
-            config: {}
-          },
-          cssModules: {
-            enable: false, // 默认为 false，如需使用 css modules 功能，则设为 true
-            config: {
-              namingPattern: 'module', // 转换模式，取值为 global/module
-              generateScopedName: '[name]__[local]___[hash:base64:5]'
-            }
-          }
+        autoprefixer: {
+          enable: true,
+          config: {}
         },
+        cssModules: {
+          enable: false, // 默认为 false，如需使用 css modules 功能，则设为 true
+          config: {
+            namingPattern: 'module', // 转换模式，取值为 global/module
+            generateScopedName: '[name]__[local]___[hash:base64:5]'
+          }
+        }
+      },
       webpackChain(chain) {
         chain.resolve.plugin('tsconfig-paths').use(TsconfigPathsPlugin)
       }

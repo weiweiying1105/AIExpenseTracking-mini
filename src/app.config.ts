@@ -1,7 +1,7 @@
 export default {
   pages: [
+    "pages/expense/index",
     "pages/profile/index",
-    "pages/accounting/index",
     "pages/statistics/index",
     "pages/index/index",
     "pages/login/index",
@@ -20,7 +20,7 @@ export default {
     borderStyle: "black",
     list: [
       {
-        pagePath: "pages/accounting/index",
+        pagePath: "pages/expense/index",
         text: "记账",
         iconPath: "assets/icons/accounting.png",
         selectedIconPath: "assets/icons/accounting.png"

@@ -24,32 +24,7 @@
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
 }
 
-.category-tabs {
-  display: flex;
-  background: #f8f9fa;
-  border-radius: 12px;
-  padding: 6px;
-  margin-bottom: 30px;
-  
-  .tab {
-    flex: 1;
-    text-align: center;
-    padding: 16px;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    
-    &.active {
-      background: #667eea;
-      color: white;
-      box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
-    }
-    
-    Text {
-      font-size: 32px;
-      font-weight: 500;
-    }
-  }
-}
+
 
 .input-group {
   margin-bottom: 30px;
@@ -63,7 +38,7 @@
   }
   
   .amount-input,
-  .desc-input {
+  .desc-textarea {
     width: 100%;
     padding: 20px 16px;
     border: 2px solid #e9ecef;
@@ -71,11 +46,19 @@
     font-size: 32px;
     background: #fff;
     transition: border-color 0.3s ease;
+    box-sizing: border-box;
     
     &:focus {
       border-color: #667eea;
       outline: none;
     }
+  }
+  
+  .desc-textarea {
+    min-height: 120px;
+    resize: none;
+    font-family: inherit;
+    line-height: 1.5;
   }
   
   .amount-input {
@@ -117,6 +100,10 @@
     margin-bottom: 20px;
     display: block;
   }
+  .total-amount {
+    color: #ff4757;
+    font-weight: bold;
+  }
 }
 
 .record-item {
@@ -132,12 +119,20 @@
   
   .record-info {
     flex: 1;
+       margin-bottom: 8px;
     
     .record-desc {
       font-size: 30px;
       color: #333;
       display: block;
-      margin-bottom: 8px;
+      margin-right: 16px;
+   
+    }
+    .record-category{
+      font-size: 20px;
+      border-width: 1px;
+      border-radius: 8px;
+      border-style: solid;
     }
     
     .record-time {
@@ -149,7 +144,7 @@
   
   .record-amount {
     font-size: 32px;
-    font-weight: bold;
+   
     
     &.expense {
       color: #ff4757;
@@ -178,4 +173,11 @@
       padding: 20px;
     }
   }
+}
+.picker-display {
+  padding: 24rpx 32rpx;
+  border: 2rpx solid #d1d5db;
+  border-radius: 16rpx;
+  background-color: #ffffff;
+  color: #374151;
 }

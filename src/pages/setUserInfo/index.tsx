@@ -60,7 +60,12 @@ const SetUserInfo: React.FC = () => {
     // 上传头像到服务器获取永久地址
     uploadAvatarToServer(avatarUrl).then((permanentAvatarUrl) => {
       console.log('永久头像地址:', permanentAvatarUrl)
-      handleSaveUserInfo({avatarUrl: permanentAvatarUrl})
+    
+      setUserInfo({
+        ...userInfo,
+        avatarUrl: permanentAvatarUrl
+      })
+      handleSaveUserInfo()
     })
   }
   
@@ -139,16 +144,14 @@ const SetUserInfo: React.FC = () => {
   }
 
   // 保存用户信息
-  const handleSaveUserInfo =async ({nickName, avatarUrl}: UserInfo) => {
-   
-
+  const handleSaveUserInfo =async () => {
     // 更新本地存储的用户信息
     const savedUserInfo = Taro.getStorageSync('userInfo') || {}
-    if (nickName) {
-      savedUserInfo.nickName = nickName
+    if (userInfo.nickName) {
+      savedUserInfo.nickName = userInfo.nickName
     }
-    if (avatarUrl) {
-      savedUserInfo.avatarUrl = avatarUrl
+    if (userInfo.avatarUrl) {
+      savedUserInfo.avatarUrl = userInfo.avatarUrl
     }
     const updatedUserInfo = {
       ...savedUserInfo
@@ -207,7 +210,7 @@ const SetUserInfo: React.FC = () => {
         </View>
 
         {/* 昵称设置 */}
-        <View className='nickname-section'>
+        <View className='nickname-section box-border'>
           <Text className='section-title'>昵称</Text>
           <Input
             className='nickname-input'
