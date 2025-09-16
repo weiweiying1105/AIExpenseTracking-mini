@@ -8,7 +8,14 @@ export default defineConfig<'webpack5'>(async (merge, { command, mode }) => {
   const baseConfig: UserConfigExport<'webpack5'> = {
     projectName: 'ai-accounting-miniapp',
     date: '2025-8-15',
-    designWidth: 750,
+    designWidth(input) {
+      // 配置 NutUI 375 尺寸
+      if (input?.file?.replace(/\\+/g, '/').indexOf('@nutui') > -1) {
+        return 375
+      }
+      // 全局使用 Taro 默认的 750 尺寸
+      return 750
+    },
     deviceRatio: {
       640: 2.34 / 2,
       750: 1,
@@ -18,7 +25,8 @@ export default defineConfig<'webpack5'>(async (merge, { command, mode }) => {
     sourceRoot: 'src',
     outputRoot: 'dist',
     plugins: [
-      '@taro-hooks/plugin-react'
+      '@taro-hooks/plugin-react',
+      '@tarojs/plugin-html'
     ],
     defineConstants: {
     },

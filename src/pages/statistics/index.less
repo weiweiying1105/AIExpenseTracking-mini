@@ -1,0 +1,308 @@
+.statistics-container {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding-bottom: 20px;
+}
+
+.header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 40px 30px 30px;
+  color: white;
+  
+  .title {
+    font-size: 48px;
+    font-weight: bold;
+    display: block;
+  }
+}
+
+.month-selector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 30px 20px;
+  background: white;
+  margin: 20px;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  
+  .month-button {
+    min-width: 200px;
+    font-size: 32px;
+    font-weight: 600;
+  }
+}
+
+.overview-cards {
+  margin: 0 20px 20px;
+  
+  .stat-card {
+    height: 120px;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    
+    &.expense-card {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+      color: white;
+      
+      .expense-value {
+        color: white;
+      }
+    }
+    
+    .card-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 20px;
+      
+      .card-label {
+        font-size: 24px;
+        color: #666;
+        margin-bottom: 8px;
+      }
+      
+      .card-value {
+        font-size: 36px;
+        font-weight: bold;
+        color: #333;
+      }
+      
+      .expense-value {
+        color: #ff4757;
+      }
+    }
+  }
+}
+
+/* 日历卡片样式 */
+.calendar-card {
+  margin: 0 20px 20px;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  
+  .calendar-container {
+    padding: 20px;
+    
+    .weekdays {
+      display: flex;
+      margin-bottom: 15px;
+      
+      .weekday {
+        flex: 1;
+        text-align: center;
+        padding: 10px 0;
+        
+        .weekday-text {
+          font-size: 24px;
+          color: #666;
+          font-weight: 500;
+        }
+      }
+    }
+    
+    .calendar-grid {
+      display: flex;
+      flex-wrap: wrap;
+      
+      .calendar-day {
+        width: calc(100% / 7);
+        height: 80px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #f0f0f0;
+        position: relative;
+        
+        &.empty {
+          background-color: #fafafa;
+        }
+        
+        .day-number {
+          font-size: 20px;
+          color: #333;
+          font-weight: 500;
+          margin-bottom: 4px;
+        }
+        
+        .day-amount {
+          font-size: 16px;
+          color: #ff4757;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+}
+
+.category-card,
+.detail-card {
+  margin: 0 20px 20px;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  
+  .card-header {
+    padding: 30px 30px 20px;
+    border-bottom: 1px solid #f0f0f0;
+    
+    .card-title {
+      font-size: 32px;
+      font-weight: 600;
+      color: #333;
+    }
+  }
+}
+
+.category-list {
+  padding: 20px 30px;
+  
+  .category-item {
+    margin-bottom: 30px;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+    
+    .category-info {
+      .category-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        
+        .category-amount {
+          font-size: 28px;
+          font-weight: 600;
+          color: #333;
+        }
+      }
+      
+      .category-percentage {
+        font-size: 24px;
+        color: #666;
+        margin-top: 8px;
+        text-align: right;
+      }
+    }
+  }
+}
+
+.expense-extra {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  
+  .expense-amount {
+    font-size: 28px;
+    font-weight: 600;
+    color: #ff4757;
+  }
+}
+
+/* NutUI 组件样式覆盖 */
+.nut-card {
+  border: none !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.nut-button {
+  border-radius: 12px !important;
+  font-weight: 500 !important;
+}
+
+.nut-cell {
+  padding: 20px 30px !important;
+  
+  .nut-cell__title {
+    font-size: 28px !important;
+    color: #333 !important;
+  }
+  
+  .nut-cell__desc {
+    font-size: 24px !important;
+    color: #999 !important;
+  }
+}
+
+.nut-tag {
+  border-radius: 8px !important;
+  font-size: 20px !important;
+  padding: 4px 12px !important;
+}
+
+.nut-progress {
+  margin: 10px 0 !important;
+}
+
+.nut-empty {
+  padding: 60px 20px !important;
+  
+  .nut-empty__description {
+    font-size: 28px !important;
+    color: #999 !important;
+  }
+}
+
+/* 响应式适配 */
+@media (max-width: 750px) {
+  .header {
+    .title {
+      font-size: 40px;
+    }
+  }
+  
+  .month-selector {
+    .month-button {
+      min-width: 160px;
+      font-size: 28px;
+    }
+  }
+  
+  .overview-cards {
+    .stat-card {
+      height: 100px;
+      
+      .card-content {
+        .card-label {
+          font-size: 20px;
+        }
+        
+        .card-value {
+          font-size: 28px;
+        }
+      }
+    }
+  }
+  
+  .card-header {
+    .card-title {
+      font-size: 28px;
+    }
+  }
+  
+  .category-list {
+    .category-item {
+      .category-info {
+        .category-header {
+          .category-amount {
+            font-size: 24px;
+          }
+        }
+        
+        .category-percentage {
+          font-size: 20px;
+        }
+      }
+    }
+  }
+  
+  .expense-extra {
+    .expense-amount {
+      font-size: 24px;
+    }
+  }
+}
