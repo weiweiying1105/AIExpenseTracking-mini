@@ -4,13 +4,14 @@
   "description": "",
   "appid": "wx930892125f3a220d",
   "setting": {
-    "urlCheck": true,
+    "urlCheck": false,
     "es6": false,
     "enhance": false,
     "compileHotReLoad": true,
     "postcss": false,
     "preloadBackgroundData": false,
     "minified": false,
+    "clearDataOnRecompile": false,
     "newFeature": true,
     "autoAudits": false,
     "coverView": true,
@@ -26,7 +27,40 @@
   "compileType": "miniprogram",
   "simulatorType": "wechat",
   "simulatorPluginLibVersion": {},
-  "condition": {},
+  "condition": {
+    "miniprogram": {
+      "list": [
+        {
+          "name": "首页",
+          "pathName": "pages/index/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "记账页面",
+          "pathName": "pages/expense/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "统计页面",
+          "pathName": "pages/statistics/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "个人中心",
+          "pathName": "pages/profile/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        }
+      ]
+    }
+  },
   "libVersion": "3.9.2",
   "srcMiniprogramRoot": "dist/",
   "packOptions": {

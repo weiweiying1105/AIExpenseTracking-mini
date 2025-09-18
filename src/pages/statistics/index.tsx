@@ -1,19 +1,20 @@
 import { View, Text } from '@tarojs/components'
 import { useState, useEffect } from 'react'
+import Taro, { useDidShow } from '@tarojs/taro'
 import { 
   Button, 
   Cell, 
   CellGroup, 
-  DatePicker, 
-  Card,
+  DatePicker,
   Grid,
   GridItem,
   Tag,
-  Calendar,
   Progress,
-  Empty
+  Empty,
+  Calendar
 } from '@nutui/nutui-react-taro'
 import { get } from '../../utils/request'
+import { eventBus, EVENT_NAMES } from '../../utils/eventBus'
 import './index.less'
 
 interface ExpenseData {
@@ -59,6 +60,25 @@ const Statistics = () => {
   useEffect(() => {
     loadMonthlyData()
   }, [currentDate])
+
+  // 监听登录成功事件
+  useEffect(() => {
+    const handleLoginSuccess = () => {
+      // 登录成功后刷新统计数据
+      loadMonthlyData()
+    }
+
+    eventBus.on(EVENT_NAMES.LOGIN_SUCCESS, handleLoginSuccess)
+
+    return () => {
+      eventBus.off(EVENT_NAMES.LOGIN_SUCCESS, handleLoginSuccess)
+    }
+  }, [currentDate])
+
+  // 页面显示时刷新数据
+  useDidShow(() => {
+    loadMonthlyData()
+  })
 
   const loadMonthlyData = async () => {
     setLoading(true)
@@ -184,15 +204,10 @@ const Statistics = () => {
   const formatCurrency = (amount: number) => {
     return `¥${amount.toFixed(2)}`
   }
-
+  const marginStyle = { margin: '8px' }
 
   return (
     <View className='statistics-container'>
-      {/* 头部 */}
-      <View className='header'>
-        <Text className='title'>统计分析</Text>
-      </View>
-
       {/* 月份切换器 */}
       <View className='month-selector'>
         <Button 
@@ -232,10 +247,75 @@ const Statistics = () => {
       />
 
       {/* 概览卡片 平铺一个月的日历，上面展示每天的支出总值*/}
-    
-      {/* 分类统计 */}
-   
-      {/* 支出明细 */}
+      <View className='calendar-card'>
+        <View className='calendar-container'>
+          {/* 星期标题 */}
+          <View className='calendar-weekdays'>
+            {['日', '一', '二', '三', '四', '五', '六'].map((day, index) => (
+              <View key={index} className='weekday'>
+                <Text className='weekday-text'>{day}</Text>
+              </View>
+            ))}
+          </View>
+          
+          {/* 日历网格 */}
+          <View className='calendar-grid'>
+            {generateCalendarData().map((dayData, index) => (
+              <View 
+                key={index} 
+                className={`calendar-day ${dayData.isEmpty ? 'empty' : ''}`}
+              >
+                {!dayData.isEmpty && (
+                  <>
+                    <Text className='day-number'>{dayData.day}</Text>
+                    {dayData.amount > 0 && (
+                      <Text className='day-amount'>
+                        -{formatCurrency(dayData.amount)}
+                      </Text>
+                    )}
+                  </>
+                )}
+              </View>
+            ))}
+          </View>
+        </View>
+      </View>
+       {/* 分类统计 */}
+       <View className="category-stats">
+         <View className="section-title">
+           <Text>分类统计</Text>
+         </View>
+         {monthlyData.categories.length > 0 ? (
+           <View className="category-list">
+             {monthlyData.categories.map((category, index) => (
+               <View key={index} className="category-item">
+                 <View className="category-info">
+                   <View className="category-name">
+                     <View 
+                       className="category-color" 
+                       style={{ backgroundColor: category.color }}
+                     ></View>
+                     <Text>{category.name}</Text>
+                   </View>
+                   <Text className="category-amount">{formatCurrency(category.amount)}</Text>
+                 </View>
+                 <View className="category-progress">
+                   <Progress 
+                         percent={category.percentage} 
+                         color={category.color}
+                         showText={false}
+                       />
+                   <Text className="percentage-text">{category.percentage.toFixed(1)}%</Text>
+                 </View>
+               </View>
+             ))}
+           </View>
+         ) : (
+           <Empty description="暂无分类数据" />
+         )}
+       </View>
+       
+       {/* 支出明细 */}
      
     </View>
   )

@@ -41,7 +41,7 @@ export default defineConfig<'webpack5'>(async (merge, { command, mode }) => {
       type: 'webpack5',
       prebundle: {
         enable: false,
-        exclude: ['react-dom']  // 排除有问题的模块
+        exclude: ['react-dom', '@nutui/nutui-react-taro', '@nutui/icons-react-taro']  // 排除有问题的模块
       }
     },
     cache: {
@@ -51,11 +51,14 @@ export default defineConfig<'webpack5'>(async (merge, { command, mode }) => {
       postcss: {
         // 开启 Tailwind
         tailwindcss: {},
-        autoprefixer: {},
+        autoprefixer: {
+          enable: true,
+          config: {}
+        },
         pxtransform: {
           enable: true,
           config: {
-
+            selectorBlackList: ['nut-']
           }
         },
         url: {

@@ -9,6 +9,8 @@
 import React, { useState, useEffect } from 'react'
 import { View, Button, Text, Image } from '@tarojs/components'
 import Taro from '@tarojs/taro'
+import { eventBus, EVENT_NAMES } from '../../utils/eventBus'
+import { post } from '../../utils/request'
 import './index.less'
 
 interface UserInfo {
@@ -45,27 +47,12 @@ const Login: React.FC = () => {
 
   // 调用登录API
   const callLoginApi = async (loginData: { code: string; nickName?: string; avatarUrl?: string }): Promise<LoginResponse> => {
-    return new Promise((resolve, reject) => {
-      Taro.request({
-        url: `${API_BASE_URL}/auth/login`,
-        method: 'POST',
-        data: loginData,
-        header: {
-          'Content-Type': 'application/json'
-        },
-        success: (res) => {
-          if (res.statusCode === 200 && res.data.code === 200) {
-            resolve(res.data.data)
-          } else {
-            reject(new Error(res.data.message || '登录失败'))
-          }
-        },
-        fail: (err) => {
-          console.error('网络请求失败:', err)
-          reject(new Error('网络请求失败，请检查网络连接'))
-        }
-      })
-    })
+    try {
+      const response = await post('/auth/login', loginData)
+      return response
+    } catch (error: any) {
+      throw new Error(error.message || '登录失败')
+    }
   }
 
   // 微信登录（不获取用户信息）
@@ -107,7 +94,10 @@ const Login: React.FC = () => {
           duration: 1500
         })
 
-        // 4. 跳转到首页
+        // 4. 发送登录成功事件，通知其他页面刷新
+        eventBus.emit(EVENT_NAMES.LOGIN_SUCCESS)
+        
+        // 5. 跳转到首页
         setTimeout(() => {
           Taro.navigateBack({
             delta: 1

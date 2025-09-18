@@ -1,15 +1,37 @@
 .profile-container {
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: relative;
   padding-bottom: 200rpx;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
+    pointer-events: none;
+  }
 }
 
 /* 用户信息区域 */
 .user-section {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 80rpx 40rpx 60rpx;
-  border-radius: 0 0 40rpx 40rpx;
-  margin-bottom: 40rpx;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 100rpx 40rpx 80rpx;
+  border-radius: 0 0 50rpx 50rpx;
+  margin: 0 30rpx 50rpx;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  position: relative;
+  z-index: 1;
 }
 
 .user-info {
@@ -20,27 +42,42 @@
 
 .avatar-container {
   position: relative;
-  margin-right: 30rpx;
+  margin-right: 40rpx;
 }
 
 .avatar .avatar-image{
-  width: 120rpx;
-  height: 120rpx;
+  width: 140rpx;
+  height: 140rpx;
   border-radius: 50%;
   background: linear-gradient(45deg, #ff9a9e, #fecfef);
-  border: 6rpx solid rgba(255, 255, 255, 0.3);
+  border: 8rpx solid rgba(255, 255, 255, 0.4);
+  box-shadow: 
+    0 8px 25px rgba(0, 0, 0, 0.2),
+    inset 0 2px 5px rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 
+      0 12px 35px rgba(0, 0, 0, 0.25),
+      inset 0 2px 5px rgba(255, 255, 255, 0.3);
+  }
 }
 
 .vip-badge {
   position: absolute;
-  top: -10rpx;
-  right: -10rpx;
-  background: #ff6b6b;
+  top: -15rpx;
+  right: -15rpx;
+  background: linear-gradient(135deg, #ff6b6b, #ee5a52);
   color: white;
-  font-size: 20rpx;
-  padding: 4rpx 12rpx;
-  border-radius: 16rpx;
-  font-weight: bold;
+  font-size: 22rpx;
+  padding: 8rpx 16rpx;
+  border-radius: 20rpx;
+  font-weight: 700;
+  box-shadow: 
+    0 4px 15px rgba(255, 107, 107, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .user-details {
@@ -50,15 +87,19 @@
 .username {
   display: block;
   color: white;
-  font-size: 36rpx;
-  font-weight: bold;
-  margin-bottom: 10rpx;
+  font-size: 42rpx;
+  font-weight: 800;
+  margin-bottom: 15rpx;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  letter-spacing: 1rpx;
 }
 
 .user-subtitle {
   display: block;
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 28rpx;
+  font-weight: 500;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 /* 积分统计区域 */
@@ -66,10 +107,23 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 30rpx;
-  padding: 40rpx;
-  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 35rpx;
+  padding: 50rpx 40rpx;
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 
+    0 8px 25px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-3rpx);
+    box-shadow: 
+      0 12px 35px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
 }
 
 .stat-item {
@@ -80,88 +134,132 @@
 .stat-number {
   display: block;
   color: white;
-  font-size: 48rpx;
-  font-weight: bold;
-  margin-bottom: 10rpx;
+  font-size: 56rpx;
+  font-weight: 800;
+  margin-bottom: 15rpx;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(135deg, #fff, #f0f0f0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .stat-label {
   display: block;
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 28rpx;
+  font-weight: 600;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .stat-divider {
-  width: 2rpx;
-  height: 60rpx;
-  background: rgba(255, 255, 255, 0.3);
-  margin: 0 40rpx;
+  width: 3rpx;
+  height: 80rpx;
+  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.4), transparent);
+  margin: 0 50rpx;
+  border-radius: 2rpx;
 }
 
 /* 功能菜单区域 */
 .menu-section {
-  background: white;
-  border-radius: 30rpx;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 35rpx;
   margin: 0 40rpx;
   overflow: hidden;
-  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.1);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  position: relative;
+  z-index: 1;
 }
 
 .menu-item {
   display: flex;
   align-items: center;
-  padding: 36rpx 40rpx;
-  border-bottom: 2rpx solid #f0f0f0;
-  transition: background-color 0.2s;
+  padding: 45rpx 40rpx;
+  transition: all 0.3s ease;
+  position: relative;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(10rpx);
+  }
+  
+  &:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 40rpx;
+    right: 40rpx;
+    height: 1rpx;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent);
+  }
   
   &:last-child {
     border-bottom: none;
   }
   
   &:active {
-    background-color: #f8f8f8;
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateX(15rpx) scale(0.98);
   }
 }
 
 .menu-icon {
-  width: 48rpx;
-  height: 48rpx;
-  margin-right: 30rpx;
-  border-radius: 12rpx;
+  width: 56rpx;
+  height: 56rpx;
+  margin-right: 40rpx;
+  border-radius: 16rpx;
+  box-shadow: 
+    0 4px 15px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 
+      0 8px 25px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
   
   &.orders-icon {
-    background: linear-gradient(45deg, #ffeaa7, #fab1a0);
+    background: linear-gradient(135deg, #ffeaa7, #fab1a0);
   }
   
   &.wallet-icon {
-    background: linear-gradient(45deg, #74b9ff, #0984e3);
+    background: linear-gradient(135deg, #74b9ff, #0984e3);
   }
   
   &.health-icon {
-    background: linear-gradient(45deg, #fd79a8, #e84393);
+    background: linear-gradient(135deg, #fd79a8, #e84393);
   }
   
   &.user-icon {
-    background: linear-gradient(45deg, #a29bfe, #6c5ce7);
+    background: linear-gradient(135deg, #a29bfe, #6c5ce7);
   }
   
   &.feedback-icon {
-    background: linear-gradient(45deg, #fdcb6e, #e17055);
+    background: linear-gradient(135deg, #fdcb6e, #e17055);
   }
   
   &.help-icon {
-    background: linear-gradient(45deg, #55efc4, #00b894);
+    background: linear-gradient(135deg, #55efc4, #00b894);
   }
   
   &.cooperation-icon {
-    background: linear-gradient(45deg, #ff7675, #d63031);
+    background: linear-gradient(135deg, #ff7675, #d63031);
   }
 }
 
 .menu-text {
   flex: 1;
-  color: #333;
-  font-size: 32rpx;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 36rpx;
+  font-weight: 600;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
 }
 
 .menu-arrow {

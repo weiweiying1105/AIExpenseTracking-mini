@@ -1,9 +1,10 @@
 import { View, Text, Button, Image } from '@tarojs/components'
-import Taro from '@tarojs/taro'
+import Taro, { useDidShow } from '@tarojs/taro'
 import './index.less'
 import { useState, useEffect } from 'react'
 import { userApi } from '../../utils/api'
 import { getUserInfo } from 'src/api/user'
+import { eventBus, EVENT_NAMES } from '../../utils/eventBus'
 
 const Profile = () => {
   const [userInfo, setUserInfo] = useState({
@@ -20,21 +21,42 @@ const Profile = () => {
     }
   })
 
-  useEffect(() => {
-    // 检查是否已经登录
+  const loadUserInfo = () => {
     const savedUserInfo = Taro.getStorageSync('userInfo')
     if (savedUserInfo) {
       setUserInfo({
         ...savedUserInfo,
         isLogin: true
       })
-    }else{
-      getUserInfo().then(res=>{
-         setUserInfo(res)
+    } else {
+      getUserInfo().then(res => {
+        setUserInfo(res)
       })
-    
+    }
+  }
+
+  useEffect(() => {
+    loadUserInfo()
+  }, [])
+
+  // 监听登录成功事件
+  useEffect(() => {
+    const handleLoginSuccess = () => {
+      // 登录成功后刷新用户信息
+      loadUserInfo()
+    }
+
+    eventBus.on(EVENT_NAMES.LOGIN_SUCCESS, handleLoginSuccess)
+
+    return () => {
+      eventBus.off(EVENT_NAMES.LOGIN_SUCCESS, handleLoginSuccess)
     }
   }, [])
+
+  // 页面显示时刷新数据
+  useDidShow(() => {
+    loadUserInfo()
+  })
 
   const handleLogin = async () => {
     try {

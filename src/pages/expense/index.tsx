@@ -1,7 +1,8 @@
 import { View, Text, Button, Input, Textarea, Picker } from '@tarojs/components'
-import Taro from '@tarojs/taro'
+import Taro, { useDidShow } from '@tarojs/taro'
 import { useEffect, useState } from 'react'
 import { get, post } from '../../utils/request'
+import { eventBus, EVENT_NAMES } from '../../utils/eventBus'
 import './index.less'
 import { formatDate } from 'src/utils/date'
 
@@ -9,22 +10,41 @@ const Accounting = () => {
   const [amount, setAmount] = useState('')
   const [description, setDescription] = useState('')
   const [loading, setLoading] = useState(false)
-  const [todayExpenseList, setTodayExpenseList] = useState<any[]>([])
-const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0])
-  const [summary,setSummary] = useState<{
+  const [expenseList, setExpenseList] = useState<any[]>([])
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0])
+  const [summary, setSummary] = useState<{
     totalAmount: number
   }>()
-  const today = new Date()
+  
   useEffect(() => {
-   httpGetTodayExpenseList()
-  },[])
-  const httpGetTodayExpenseList = async () => {
-    const start = today.toISOString().split('T')[0]
-    const end = start;
-    // 获取今天
+    getExpenseListByDate(selectedDate)
+  }, [selectedDate])
+
+  // 监听登录成功事件
+  useEffect(() => {
+    const handleLoginSuccess = () => {
+      // 登录成功后刷新当前日期的数据
+      getExpenseListByDate(selectedDate)
+    }
+
+    eventBus.on(EVENT_NAMES.LOGIN_SUCCESS, handleLoginSuccess)
+
+    return () => {
+      eventBus.off(EVENT_NAMES.LOGIN_SUCCESS, handleLoginSuccess)
+    }
+  }, [selectedDate])
+
+  // 页面显示时刷新数据
+  useDidShow(() => {
+    getExpenseListByDate(selectedDate)
+  })
+  const getExpenseListByDate = async (date: string) => {
+    const start = date
+    const end = date
+    // 获取指定日期的支出
     get('/expense/range?startDate=' + start + '&endDate=' + end).then(res => {
-      // console.log('获取今天账单:', res)
-      setTodayExpenseList(res.expenses)
+      // console.log('获取指定日期账单:', res)
+      setExpenseList(res.expenses)
       setSummary(res.summary)
     })
   }
@@ -48,7 +68,7 @@ const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split(
         title: '记账成功',
         icon: 'success'
       })
-      httpGetTodayExpenseList()
+      getExpenseListByDate(selectedDate)
       // 清空表单
       setAmount('')
       setDescription('')
@@ -112,11 +132,11 @@ const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split(
 
       <View className='recent-section'>
       <View className="flex justify-between items-center">
-        <Text className='section-title'>今天支出</Text>
+        <Text className='section-title'>{selectedDate} 支出</Text>
         <Text className='total-amount text-[#ff4757]'>-￥{summary?.totalAmount || 0}</Text>
       </View>
         {
-          todayExpenseList.map((item) => (
+          expenseList.map((item) => (
             <View className='record-item' key={item.id}>
               <View className='record-info'>
                <View className='flex justify-start items-center'> 
