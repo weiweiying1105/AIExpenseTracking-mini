@@ -85,70 +85,70 @@ const Accounting = () => {
 
   return (
     <View className='accounting-container'>
-     
-      <View className='date-container'>
-        <View className='input-group'>
-          <Text className='label inline-block py-[10px]'>记账日期</Text>
-          <Picker
-            mode='date'
-            value={selectedDate}
-            onChange={(e) => setSelectedDate(e.detail.value)}
-          >
-            <View className='picker-display'>
-              <Text>{selectedDate}</Text>
-            </View>
-          </Picker>
-        </View>
-      </View>
-      
-      <View className='form-section'>
-
-      
-
-        <View className='input-group box-border'>
-          <Text className='label'>描述</Text>
-          <Textarea
-            className='desc-textarea box-border'
-            placeholder='请输入消费描述'
-            value={description}
-            onInput={(e) => setDescription(e.detail.value)}
-            maxlength={200}
-            showConfirmBar={false}
-            autoHeight
-          />
-        </View>
-
-        <Button 
-          className='submit-btn' 
-          onClick={handleSubmit}
-          loading={loading}
-          disabled={loading}
-        >
-          {loading ? '记录中...' : '记录'}
-        </Button>
-      </View>
-
-      <View className='recent-section'>
-      <View className="flex justify-between items-center">
-        <Text className='section-title'>{selectedDate} 支出</Text>
-        <Text className='total-amount text-[#ff4757]'>-￥{summary?.totalAmount || 0}</Text>
-      </View>
-        {
-          expenseList.map((item) => (
-            <View className='record-item' key={item.id}>
-              <View className='record-info'>
-               <View className='flex justify-start items-center'> 
-                 <Text className='record-desc'>{item.description}</Text>
-                 <Text className='record-category' style={{color: item.category?.color,borderColor: item.category?.color,display: item.category?.name ? 'block' : 'none'}}>{item?.category?.name}</Text>
-               </View>
-                <Text className='record-time'>{formatDate(new Date(item.date), 'yyyy-MM-dd hh:mm')}</Text>
+      {/* 主要内容区域 */}
+      <View style={{ flex: 1, overflowY: 'auto', }}>
+        {/* 日期选择 */}
+        <View className='date-container'>
+          <View className='input-group'>
+            <Text className='label'>Date</Text>
+            <Picker
+              mode='date'
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.detail.value)}
+            >
+              <View className='picker-display'>
+                <Text>{selectedDate}</Text>
               </View>
-              <Text className='record-amount expense'>-￥{item.amount}</Text>
-            </View>
-          ))
-        }
+            </Picker>
+          </View>
+        </View>
         
+        {/* 表单区域 */}
+        <View className='form-section'>
+         
+          <View className='input-group'>
+            <Text className='label'>Description</Text>
+            <Textarea
+              className='desc-textarea'
+              placeholder='请输入消费描述'
+              value={description}
+              onInput={(e) => setDescription(e.detail.value)}
+              maxlength={200}
+              showConfirmBar={false}
+              autoHeight
+            />
+          </View>
+
+          <Button 
+            className='submit-btn' 
+            onClick={handleSubmit}
+            loading={loading}
+            disabled={loading}
+          >
+            {loading ? '记录中...' : 'Submit'}
+          </Button>
+        </View>
+
+        {/* 交易记录区域 */}
+        <View className='recent-section'>
+          {
+            expenseList.map((item) => (
+              <View className='record-item' key={item.id}>
+                <View className='record-info'>
+                  <View className='record-icon'>💳</View>
+                  <View className='record-details'>
+                    <Text className='record-desc'>{item.description}</Text>
+                    <Text className='record-date'>{formatDate(new Date(item.date), 'MMM dd, yyyy')}</Text>
+                  </View>
+                </View>
+                <Text className='record-amount'>-${item.amount}</Text>
+              </View>
+            ))
+          }
+        </View>
       </View>
+
+     
     </View>
   )
 }

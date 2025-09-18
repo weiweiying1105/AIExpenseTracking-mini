@@ -32,7 +32,7 @@
       "list": [
         {
           "name": "首页",
-          "pathName": "pages/index/index",
+          "pathName": "pages/expense/index",
           "query": "",
           "launchMode": "default",
           "scene": null

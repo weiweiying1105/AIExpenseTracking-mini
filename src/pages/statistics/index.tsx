@@ -91,11 +91,11 @@ const Statistics = () => {
       // 处理分类统计
       const categoryMap = new Map<string, { amount: number, color: string }>()
       let totalExpense = 0
-      
-      res.expenses?.forEach((expense: ExpenseData) => {
+      if(res && res.expenses){
+        res.expenses.forEach((expense: ExpenseData) => {
         totalExpense += expense.amount
-        const categoryName = expense.category?.name || '其他'
-        const categoryColor = expense.category?.color || '#999'
+        const categoryName = expense.category && expense.category.name ? expense.category.name : '其他'
+        const categoryColor = expense.category && expense.category.color ? expense.category.color : '#999'
         
         if (categoryMap.has(categoryName)) {
           categoryMap.get(categoryName)!.amount += expense.amount
@@ -103,6 +103,7 @@ const Statistics = () => {
           categoryMap.set(categoryName, { amount: expense.amount, color: categoryColor })
         }
       })
+    }
       
       const categories: CategoryStat[] = Array.from(categoryMap.entries()).map(([name, data]) => ({
         name,
@@ -116,7 +117,7 @@ const Statistics = () => {
       setMonthlyData({
         totalExpense,
         totalIncome: 0, // 暂时设为0，可以后续添加收入功能
-        expenseCount: res.expenses?.length || 0,
+        expenseCount: res.expenses ? res.expenses.length : 0,
         avgDaily: totalExpense / daysInMonth,
         categories,
         expenses: res.expenses || []
@@ -151,13 +152,15 @@ const Statistics = () => {
     }
     
     // 计算每天的支出总额
-    monthlyData.expenses.forEach(expense => {
+    if (monthlyData && monthlyData.expenses) {
+      monthlyData.expenses.forEach(expense => {
       const expenseDate = new Date(expense.date)
       if (expenseDate.getFullYear() === year && expenseDate.getMonth() === month) {
         const day = expenseDate.getDate()
         dailyExpenses[day] += expense.amount
       }
     })
+    }
     
     return dailyExpenses
   }
