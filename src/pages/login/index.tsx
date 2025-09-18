@@ -40,7 +40,7 @@ const Login: React.FC = () => {
     if (token && savedUserInfo) {
       // 已登录，跳转到首页
       Taro.switchTab({
-        url: '/pages/index/index'
+        url: '/pages/expense/index'
       })
     }
   }

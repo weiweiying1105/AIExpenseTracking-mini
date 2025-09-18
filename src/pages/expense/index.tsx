@@ -85,9 +85,7 @@ const Accounting = () => {
 
   return (
     <View className='accounting-container'>
-      <View className='header'>
-        <Text className='title'>记账</Text>
-      </View>
+     
       <View className='date-container'>
         <View className='input-group'>
           <Text className='label inline-block py-[10px]'>记账日期</Text>

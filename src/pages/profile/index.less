@@ -1,35 +1,14 @@
 .profile-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #f8fafb;
   position: relative;
-  padding-bottom: 200rpx;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-      radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
-      radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
-    pointer-events: none;
-  }
 }
 
 /* 用户信息区域 */
-.user-section {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 100rpx 40rpx 80rpx;
-  border-radius: 0 0 50rpx 50rpx;
-  margin: 0 30rpx 50rpx;
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+.profile-header {
+  padding: 50rpx 30rpx 35rpx;
+  background: #ffffff;
+  border-bottom: 1px solid #e8f0fe;
   position: relative;
   z-index: 1;
 }
@@ -37,69 +16,32 @@
 .user-info {
   display: flex;
   align-items: center;
-  margin-bottom: 60rpx;
+  margin-bottom: 35rpx;
 }
 
-.avatar-container {
-  position: relative;
-  margin-right: 40rpx;
-}
-
-.avatar .avatar-image{
-  width: 140rpx;
-  height: 140rpx;
+.avatar {
+  width: 100rpx;
+  height: 100rpx;
   border-radius: 50%;
-  background: linear-gradient(45deg, #ff9a9e, #fecfef);
-  border: 8rpx solid rgba(255, 255, 255, 0.4);
-  box-shadow: 
-    0 8px 25px rgba(0, 0, 0, 0.2),
-    inset 0 2px 5px rgba(255, 255, 255, 0.3);
-  transition: all 0.3s ease;
-  
-  &:hover {
-    transform: scale(1.05);
-    box-shadow: 
-      0 12px 35px rgba(0, 0, 0, 0.25),
-      inset 0 2px 5px rgba(255, 255, 255, 0.3);
-  }
-}
-
-.vip-badge {
-  position: absolute;
-  top: -15rpx;
-  right: -15rpx;
-  background: linear-gradient(135deg, #ff6b6b, #ee5a52);
-  color: white;
-  font-size: 22rpx;
-  padding: 8rpx 16rpx;
-  border-radius: 20rpx;
-  font-weight: 700;
-  box-shadow: 
-    0 4px 15px rgba(255, 107, 107, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  margin-right: 25rpx;
+  border: 2rpx solid #e8f0fe;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .user-details {
   flex: 1;
 }
 
-.username {
-  display: block;
-  color: white;
-  font-size: 42rpx;
-  font-weight: 800;
-  margin-bottom: 15rpx;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  letter-spacing: 1rpx;
+.nickname {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 8rpx;
 }
 
-.user-subtitle {
-  display: block;
-  color: rgba(255, 255, 255, 0.85);
-  font-size: 28rpx;
-  font-weight: 500;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+.user-id {
+  font-size: 22rpx;
+  color: #666;
 }
 
 /* 积分统计区域 */
@@ -131,25 +73,16 @@
   flex: 1;
 }
 
-.stat-number {
-  display: block;
-  color: white;
-  font-size: 56rpx;
-  font-weight: 800;
-  margin-bottom: 15rpx;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  background: linear-gradient(135deg, #fff, #f0f0f0);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.stat-value {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 6rpx;
 }
 
 .stat-label {
-  display: block;
-  color: rgba(255, 255, 255, 0.85);
-  font-size: 28rpx;
-  font-weight: 600;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  font-size: 20rpx;
+  color: #666;
 }
 
 .stat-divider {
@@ -162,48 +95,30 @@
 
 /* 功能菜单区域 */
 .menu-section {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 35rpx;
-  margin: 0 40rpx;
-  overflow: hidden;
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  position: relative;
-  z-index: 1;
+  margin: 30rpx 25rpx;
 }
 
 .menu-item {
-  display: flex;
-  align-items: center;
-  padding: 45rpx 40rpx;
+  background: #ffffff;
+  border: 1px solid #e8f0fe;
+  border-radius: 12rpx;
+  margin-bottom: 15rpx;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   transition: all 0.3s ease;
   position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  padding: 35rpx 25rpx;
   
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: translateX(10rpx);
-  }
-  
-  &:not(:last-child)::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 40rpx;
-    right: 40rpx;
-    height: 1rpx;
-    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent);
-  }
-  
-  &:last-child {
-    border-bottom: none;
+    transform: translateY(-1rpx);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
   
   &:active {
-    background: rgba(255, 255, 255, 0.15);
-    transform: translateX(15rpx) scale(0.98);
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
   }
 }
 
