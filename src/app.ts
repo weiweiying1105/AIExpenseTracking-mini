@@ -7,8 +7,6 @@ import './index.css'
 import './styles/tailwind.css'
 import { get } from './utils/request'
 import Taro from '@tarojs/taro'
-// 默认主题
-import '@nutui/nutui-react-taro/dist/style.css'
 class App extends Component<PropsWithChildren> {
 
   componentDidMount() {

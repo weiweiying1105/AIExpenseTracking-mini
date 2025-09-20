@@ -95,7 +95,7 @@ const Statistics = () => {
         res.expenses.forEach((expense: ExpenseData) => {
         totalExpense += expense.amount
         const categoryName = expense.category && expense.category.name ? expense.category.name : '其他'
-        const categoryColor = expense.category && expense.category.color ? expense.category.color : '#999'
+        const categoryColor = expense.category && expense.category.color ? expense.category.color : '#4CAF50'
         
         if (categoryMap.has(categoryName)) {
           categoryMap.get(categoryName)!.amount += expense.amount
@@ -179,20 +179,23 @@ const Statistics = () => {
     const daysInMonth = new Date(year, month + 1, 0).getDate()
     const firstDayOfWeek = getFirstDayOfWeek()
     const dailyExpenses = getDailyExpenses()
+    const today = new Date()
     
-    const calendarData: Array<{ day: number; amount: number; isEmpty: boolean }> = []
+    const calendarData: Array<{ day: number; amount: number; isEmpty: boolean; isToday: boolean }> = []
     
     // 添加空白天数（上个月的尾部）
     for (let i = 0; i < firstDayOfWeek; i++) {
-      calendarData.push({ day: 0, amount: 0, isEmpty: true })
+      calendarData.push({ day: 0, amount: 0, isEmpty: true, isToday: false })
     }
     
     // 添加当月的天数
     for (let day = 1; day <= daysInMonth; day++) {
+      const isToday = today.getFullYear() === year && today.getMonth() === month && today.getDate() === day
       calendarData.push({
         day,
         amount: dailyExpenses[day] || 0,
-        isEmpty: false
+        isEmpty: false,
+        isToday
       })
     }
     
@@ -211,35 +214,85 @@ const Statistics = () => {
 
   return (
     <View className='statistics-container'>
-      {/* 月份切换器 */}
-      <View className='month-selector'>
-        <Button 
-          size='small' 
-          fill='outline'
-          onClick={() => changeMonth(-1)}
-        >
-          ‹
-        </Button>
-        
-        <Button 
-          className='month-button'
-          fill='outline'
-          onClick={() => setShowDatePicker(true)}
-        >
-          {formatMonth(currentDate)}
-        </Button>
-        
-        <Button 
-          size='small' 
-          fill='outline'
-          onClick={() => changeMonth(1)}
-        >
-          ›
-        </Button>
+
+      <View className='main-content'>
+        {/* 月份/年份切换 */}
+        <View className='period-selector'>
+          <View className='period-tabs'>
+            <View className='tab active'>
+              <Text className='tab-text active'>Month</Text>
+            </View>
+            <View className='tab'>
+              <Text className='tab-text'>Year</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* 日历卡片 */}
+        <View className='calendar-card'>
+          <View className='calendar-header'>
+            <Button className='nav-btn' onClick={() => changeMonth(-1)}>
+              <Text className='nav-icon'>‹</Text>
+            </Button>
+            <Text className='month-title'>{formatMonth(currentDate)}</Text>
+            <Button className='nav-btn' onClick={() => changeMonth(1)}>
+              <Text className='nav-icon'>›</Text>
+            </Button>
+          </View>
+          
+          <View className='calendar-grid'>
+            {/* 星期标题 */}
+            <View className='weekday'>S</View>
+            <View className='weekday'>M</View>
+            <View className='weekday'>T</View>
+            <View className='weekday'>W</View>
+            <View className='weekday'>T</View>
+            <View className='weekday'>F</View>
+            <View className='weekday'>S</View>
+            
+            {/* 日历日期 */}
+            {generateCalendarData().map((dayData, index) => (
+              <View key={index} className={`calendar-day ${dayData.isEmpty ? 'empty' : ''} ${dayData.isToday ? 'today' : ''}`}>
+                {!dayData.isEmpty && (
+                  <>
+                    <Text className='day-number'>{dayData.day}</Text>
+                    {dayData.amount > 0 && (
+                      <Text className='day-amount'>{formatCurrency(dayData.amount)}</Text>
+                    )}
+                  </>
+                )}
+              </View>
+            ))}
+          </View>
+        </View>
+
+        {/* 统计卡片 */}
+        <View className='stats-card'>
+          {monthlyData.categories.map((category, index) => (
+            <View key={index} className='stat-item'>
+              <View className='stat-header'>
+                <Text className='stat-label'>{category.name}</Text>
+                <Text className='stat-value'>${category.amount.toFixed(2)}</Text>
+              </View>
+              <View className='progress-bar'>
+                <View 
+                  className='progress-fill' 
+                  style={{
+                    width: `${category.percentage}%`,
+                    backgroundColor: category.color
+                  }}
+                ></View>
+              </View>
+              {/* <Text className='stat-percentage'>{category.percentage.toFixed(1)}%</Text> */}
+            </View>
+          ))}
+        </View>
       </View>
 
-      {/* 月份 选择器 */}
-     <DatePicker
+   
+
+      {/* 月份选择器 */}
+      <DatePicker
         visible={showDatePicker}
         value={currentDate}
         onClose={() => setShowDatePicker(false)}
@@ -248,78 +301,6 @@ const Statistics = () => {
           setShowDatePicker(false)
         }}
       />
-
-      {/* 概览卡片 平铺一个月的日历，上面展示每天的支出总值*/}
-      <View className='calendar-card'>
-        <View className='calendar-container'>
-          {/* 星期标题 */}
-          <View className='calendar-weekdays'>
-            {['日', '一', '二', '三', '四', '五', '六'].map((day, index) => (
-              <View key={index} className='weekday'>
-                <Text className='weekday-text'>{day}</Text>
-              </View>
-            ))}
-          </View>
-          
-          {/* 日历网格 */}
-          <View className='calendar-grid'>
-            {generateCalendarData().map((dayData, index) => (
-              <View 
-                key={index} 
-                className={`calendar-day ${dayData.isEmpty ? 'empty' : ''}`}
-              >
-                {!dayData.isEmpty && (
-                  <>
-                    <Text className='day-number'>{dayData.day}</Text>
-                    {dayData.amount > 0 && (
-                      <Text className='day-amount'>
-                        -{formatCurrency(dayData.amount)}
-                      </Text>
-                    )}
-                  </>
-                )}
-              </View>
-            ))}
-          </View>
-        </View>
-      </View>
-       {/* 分类统计 */}
-       <View className="category-stats">
-         <View className="section-title">
-           <Text>分类统计</Text>
-         </View>
-         {monthlyData.categories.length > 0 ? (
-           <View className="category-list">
-             {monthlyData.categories.map((category, index) => (
-               <View key={index} className="category-item">
-                 <View className="category-info">
-                   <View className="category-name">
-                     <View 
-                       className="category-color" 
-                       style={{ backgroundColor: category.color }}
-                     ></View>
-                     <Text>{category.name}</Text>
-                   </View>
-                   <Text className="category-amount">{formatCurrency(category.amount)}</Text>
-                 </View>
-                 <View className="category-progress">
-                   <Progress 
-                         percent={category.percentage} 
-                         color={category.color}
-                         showText={false}
-                       />
-                   <Text className="percentage-text">{category.percentage.toFixed(1)}%</Text>
-                 </View>
-               </View>
-             ))}
-           </View>
-         ) : (
-           <Empty description="暂无分类数据" />
-         )}
-       </View>
-       
-       {/* 支出明细 */}
-     
     </View>
   )
 }

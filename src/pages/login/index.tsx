@@ -94,14 +94,15 @@ const Login: React.FC = () => {
           duration: 1500
         })
 
-        // 4. 发送登录成功事件，通知其他页面刷新
-        eventBus.emit(EVENT_NAMES.LOGIN_SUCCESS)
-        
-        // 5. 跳转到首页
+        // 4. 跳转到首页
         setTimeout(() => {
           Taro.navigateBack({
             delta: 1
           })
+          // 5. 延迟发送登录成功事件，确保页面跳转完成后再刷新数据
+          setTimeout(() => {
+            eventBus.emit(EVENT_NAMES.LOGIN_SUCCESS)
+          }, 500)
         }, 1500)
       } else {
         throw new Error('登录失败，未获取到token')
@@ -123,33 +124,31 @@ const Login: React.FC = () => {
 
   return (
     <View className='login-container'>
-      <View className='login-header'>
-        <View className='logo'>
-          💰
+      <View className='main-content'>
+        <View className='icon-container'>
+          <View className='wallet-icon'>
+            <Text className='icon-text'>💳</Text>
+          </View>
         </View>
-        <Text className='app-name'>AI记账助手11</Text>
-        <Text className='app-desc'>智能记账，轻松理财</Text>
-      </View>
-
-      <View className='login-content'>
-        <View className='login-buttons'>
+        
+        <Text className='main-title'>Your Money Companion</Text>
+        
+        <Text className='description'>
+          A simple and cute way to track your expenses.
+        </Text>
+        
+        <View className='button-container'>
           <Button
-            className='wx-login-btn'
+            className='authorize-btn'
             onClick={handleWxLogin}
             loading={loading}
             disabled={loading}
           >
-            {loading ? '登录中...' : '微信快速登录'}
+            <View className='btn-content'>
+            
+              <Text className='btn-text'>{loading ? '授权中...' : '微信登录'}</Text>
+            </View>
           </Button>
-
-
-
-        </View>
-
-        <View className='login-tips'>
-          <Text className='tip-text'>
-            登录即表示同意《用户协议》和《隐私政策》
-          </Text>
         </View>
       </View>
     </View>

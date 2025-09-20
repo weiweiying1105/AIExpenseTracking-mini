@@ -1,183 +1,201 @@
-.login-container {
+.page-container {
   min-height: 100vh;
-  background: #f8fafb;
   display: flex;
   flex-direction: column;
+  position: relative;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 48rpx;
+  text-align: center;
+}
+
+.icon-container {
+  margin-bottom: 96rpx;
+}
+
+.wallet-icon {
+  font-size: 160rpx;
+  line-height: 1;
+  color: #4285f4;
+  text-shadow: 0 4rpx 16rpx rgba(66, 133, 244, 0.3);
+}
+
+.main-title {
+  font-size: 64rpx;
+  font-weight: bold;
+  color: #1a1a1a;
+  margin-bottom: 32rpx;
+  line-height: 1.2;
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+}
+
+.description {
+  font-size: 32rpx;
+  color: rgba(26, 26, 26, 0.6);
+  line-height: 1.5;
+  margin-bottom: 128rpx;
+  max-width: 480rpx;
+}
+
+.button-container {
+  width: 100%;
+  max-width: 480rpx;
+  border-radius: 36rpx;
+  overflow: hidden;
+}
+
+.authorize-btn {
+  width: 100%;
+  height: 128rpx;
+  background: #8af5b5;
+  border: none;
+  border-radius: 24rpx;
+  font-weight: bold;
+  font-size: 36rpx;
+  color: #1a1a1a;
+  box-shadow: 0 8rpx 24rpx rgba(66, 133, 244, 0.3);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+
+  &:hover {
+   
+    transform: scale(1.05);
+    box-shadow: 0 12rpx 32rpx rgba(66, 133, 244, 0.4);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &.button-loading {
+    opacity: 0.8;
+  }
+  &::after{
+    display: none;
+  }
+}
+
+.btn-content {
+  display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px 20px;
-  position: relative;
-}
-
-.login-header {
-  text-align: center;
-  margin-bottom: 50px;
-  position: relative;
-  z-index: 1;
-  
-  .logo {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    background: #ffffff;
-    border: 1px solid #e8f0fe;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    margin: 0 auto 25px;
-    transition: all 0.3s ease;
-    
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-  }
-  
-  .app-name {
-    font-size: 42px;
-    font-weight: 700;
-    color: #1a1a1a;
-    margin-bottom: 10px;
-    letter-spacing: -0.5px;
-  }
-  
-  .app-desc {
-    font-size: 24px;
-    color: #666;
-    font-weight: 500;
-    line-height: 1.4;
-  }
-}
-
-.login-content {
+  gap: 24rpx;
   width: 100%;
-  max-width: 380px;
-  position: relative;
-  z-index: 1;
+  height: 100%;
 }
 
-.user-preview {
-  margin-bottom: 35px;
-  padding: 25px;
-  background: #ffffff;
-  border: 1px solid #e8f0fe;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  text-align: center;
-  transition: all 0.3s ease;
-  
-  &:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-
-  .avatar {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    margin: 0 auto 18px;
-    border: 2px solid #e8f0fe;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    transition: all 0.3s ease;
-    
-    &:hover {
-      transform: scale(1.03);
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-    }
-  }
-
-  .nickname {
-    font-size: 28px;
-    font-weight: 600;
-    color: #1a1a1a;
-  }
-}
-
-.login-buttons {
+.btn-icon {
+  width: 64rpx;
+  height: 64rpx;
   display: flex;
-  flex-direction: column;
-  gap: 30rpx;
-  margin-bottom: 80rpx;
-
-  .wx-login-btn {
-    height: 80rpx;
-    background: #4285f4;
-    color: #fff;
-    border: none;
-    border-radius: 12rpx;
-    font-size: 28rpx;
-    font-weight: 600;
-    box-shadow: 0 2px 8px rgba(66, 133, 244, 0.3);
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-
-    &:active {
-      transform: translateY(0);
-      box-shadow: 0 2px 6px rgba(66, 133, 244, 0.3);
-    }
-    
-    &:hover {
-      transform: translateY(-2rpx);
-      box-shadow: 0 4px 12px rgba(66, 133, 244, 0.4);
-      background: #3367d6;
-    }
-
-    &.button-loading {
-      background: rgba(66, 133, 244, 0.7);
-      opacity: 0.8;
-    }
-  }
-
-  .guest-btn {
-    height: 100rpx;
-    background: rgba(255, 255, 255, 0.15);
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    border-radius: 50rpx;
-    font-size: 36rpx;
-    font-weight: 600;
-    backdrop-filter: blur(20rpx);
-    box-shadow: 
-      0 8px 25px rgba(0, 0, 0, 0.1),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    transition: all 0.3s ease;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-
-    &:active {
-      background: rgba(255, 255, 255, 0.25);
-      transform: translateY(3rpx);
-      box-shadow: 
-        0 4px 15px rgba(0, 0, 0, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    }
-    
-    &:hover {
-      background: rgba(255, 255, 255, 0.2);
-      transform: translateY(-2rpx);
-      box-shadow: 
-        0 12px 35px rgba(0, 0, 0, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    }
-  }
+  align-items: center;
+  justify-content: center;
 }
 
-.login-tips {
+.icon-svg {
+  width: 64rpx;
+  height: 64rpx;
+  fill: currentColor;
+}
+
+.btn-text {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #1a1a1a;
+}
+
+.footer {
+  padding: 64rpx 48rpx;
   text-align: center;
-  margin-top: auto;
-  padding-top: 60rpx;
-  position: relative;
-  z-index: 1;
+}
 
-  .tip-text {
-    font-size: 24rpx;
+.footer-text {
+  font-size: 24rpx;
+  color: rgba(26, 26, 26, 0.4);
+  line-height: 1.5;
+}
+
+/* 深色模式支持 */
+@media (prefers-color-scheme: dark) {
+  .main-title {
+    color: white;
+  }
+  
+  .description {
     color: rgba(255, 255, 255, 0.6);
-    line-height: 1.5;
+  }
+  
+  .footer-text {
+    color: rgba(255, 255, 255, 0.4);
+  }
+  
+  .authorize-btn {
+    color: white;
+  }
+  
+  .btn-text {
+    color: white;
   }
 }
 
-/* 适配不同屏幕尺寸 */
+/* 响应式设计 */
 @media screen and (max-height: 600px) {
-  .login-header {
-    margin-top: 60rpx;
-    margin-bottom: 60rpx;
+  .icon-container {
+    margin-bottom: 48rpx;
+  }
+  
+  .description {
+    margin-bottom: 64rpx;
+  }
+  
+  .wallet-icon {
+    font-size: 120rpx;
+  }
+  
+  .main-title {
+    font-size: 48rpx;
+  }
+  
+  .footer {
+    padding: 32rpx 48rpx;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .main-content {
+    padding: 32rpx;
+  }
+  
+  .main-title {
+    font-size: 56rpx;
+  }
+  
+  .description {
+    font-size: 28rpx;
+  }
+  
+  .authorize-btn {
+    height: 112rpx;
+    font-size: 32rpx;
+  }
+  
+  .btn-text {
+    font-size: 32rpx;
+  }
+  
+  .footer {
+    padding: 32rpx;
+  }
+  
+  .footer-text {
+    font-size: 22rpx;
   }
 }
