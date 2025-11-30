@@ -20,24 +20,12 @@ const Accounting = () => {
     getExpenseListByDate(selectedDate)
   }, [selectedDate])
 
-  // 监听登录成功事件
-  useEffect(() => {
-    const handleLoginSuccess = () => {
-      // 登录成功后刷新当前日期的数据
-      getExpenseListByDate(selectedDate)
-    }
-
-    eventBus.on(EVENT_NAMES.LOGIN_SUCCESS, handleLoginSuccess)
-
-    return () => {
-      eventBus.off(EVENT_NAMES.LOGIN_SUCCESS, handleLoginSuccess)
-    }
-  }, [selectedDate])
+  // 已移除登录成功事件监听，改由 useDidShow 负责页面显式刷新，避免重复触发请求
 
   // 页面显示时刷新数据
-  useDidShow(() => {
-    getExpenseListByDate(selectedDate)
-  })
+  // useDidShow(() => {
+  //   getExpenseListByDate(selectedDate)
+  // })
   const getExpenseListByDate = async (date: string) => {
     const start = date
     const end = date
@@ -49,6 +37,7 @@ const Accounting = () => {
     })
   }
   const handleSubmit = async () => {
+    console.log('提交')
     if (!description) {
       Taro.showToast({
         title: '请填写完整信息',
