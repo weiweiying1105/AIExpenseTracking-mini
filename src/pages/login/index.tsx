@@ -12,17 +12,12 @@ import Taro from '@tarojs/taro'
 import { eventBus, EVENT_NAMES } from '../../utils/eventBus'
 import { post } from '../../utils/request'
 import './index.less'
-
+import { callLoginApi } from '../../api/user'
 interface UserInfo {
   nickName: string
   avatarUrl: string
 }
 
-interface LoginResponse {
-  token: string
-  openid: string
-  userInfo?: any
-}
 
 const Login: React.FC = () => {
   const [loading, setLoading] = useState(false)
@@ -45,15 +40,7 @@ const Login: React.FC = () => {
     }
   }
 
-  // 调用登录API
-  const callLoginApi = async (loginData: { code: string; nickName?: string; avatarUrl?: string }): Promise<LoginResponse> => {
-    try {
-      const response = await post('/auth/login', loginData)
-      return response
-    } catch (error: any) {
-      throw new Error(error.message || '登录失败')
-    }
-  }
+
 
   // 微信登录（不获取用户信息）
   const handleWxLogin = async () => {

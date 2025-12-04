@@ -75,10 +75,21 @@ const Statistics = () => {
     }
   }, [currentDate])
 
-  // 页面显示时刷新数据
-  useDidShow(() => {
-    loadMonthlyData()
-  })
+  // 监听token更新事件，在token可用时刷新数据
+  useEffect(() => {
+    const handleTokenUpdated = () => {
+      // token更新后刷新统计数据
+      loadMonthlyData()
+    }
+
+    eventBus.on(EVENT_NAMES.TOKEN_UPDATED, handleTokenUpdated)
+
+    return () => {
+      eventBus.off(EVENT_NAMES.TOKEN_UPDATED, handleTokenUpdated)
+    }
+  }, [currentDate])
+
+
 
   const loadMonthlyData = async () => {
     setLoading(true)
@@ -267,7 +278,7 @@ const Statistics = () => {
         </View>
 
         {/* 统计卡片 */}
-        <View className='stats-card'>
+        <View className={monthlyData.categories.length > 0 ? 'stats-card' : 'stats-card hidden'}>
           {monthlyData.categories.map((category, index) => (
             <View key={index} className='stat-item'>
               <View className='stat-header'>

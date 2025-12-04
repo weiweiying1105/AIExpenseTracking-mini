@@ -20,7 +20,18 @@ const Accounting = () => {
     getExpenseListByDate(selectedDate)
   }, [selectedDate])
 
-  // 已移除登录成功事件监听，改由 useDidShow 负责页面显式刷新，避免重复触发请求
+  // 监听token更新事件，在token可用时刷新数据
+  useEffect(() => {
+    const handleTokenUpdated = () => {
+      getExpenseListByDate(selectedDate)
+    }
+
+    eventBus.on(EVENT_NAMES.TOKEN_UPDATED, handleTokenUpdated)
+    
+    return () => {
+      eventBus.off(EVENT_NAMES.TOKEN_UPDATED, handleTokenUpdated)
+    }
+  }, [selectedDate])
 
   // 页面显示时刷新数据
   // useDidShow(() => {

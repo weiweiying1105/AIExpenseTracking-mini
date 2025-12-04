@@ -9,10 +9,12 @@ import { get } from './utils/request'
 import Taro from '@tarojs/taro'
 class App extends Component<PropsWithChildren> {
 
-  componentDidMount() {
-    get('/user/info').then(res => {
-      Taro.setStorageSync('userInfo', res.data)
-    })
+  async componentDidMount() {
+    if (Taro.getStorageSync('token')) {
+      get('/user/info').then(res => {
+        Taro.setStorageSync('userInfo', res.data)
+      })
+    }
   }
 
   componentDidShow() { }
