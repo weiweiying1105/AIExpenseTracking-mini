@@ -283,7 +283,7 @@ const Statistics = () => {
             <View key={index} className='stat-item'>
               <View className='stat-header'>
                 <Text className='stat-label'>{category.name}</Text>
-                <Text className='stat-value'>${category.amount.toFixed(2)}</Text>
+                <Text className='stat-value'>￥{category.amount.toFixed(2)}</Text>
               </View>
               <View className='progress-bar'>
                 <View 

@@ -1,6 +1,6 @@
 {
   "pages": [
-     "pages/expense/index",
+    "pages/expense/index",
     "pages/profile/index",
     "pages/statistics/index",
     "pages/login/index",

@@ -1,7 +1,7 @@
 export default {
   pages: [
-    "pages/statistics/index",
     "pages/expense/index",
+    "pages/statistics/index",
     "pages/profile/index",
     "pages/login/index",
     "pages/setUserInfo/index",

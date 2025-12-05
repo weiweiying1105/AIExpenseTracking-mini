@@ -141,7 +141,7 @@ const Accounting = () => {
                     <Text className='record-date'>{formatDate(new Date(item.date), 'MMM dd, yyyy')}</Text>
                   </View>
                 </View>
-                <Text className='record-amount'>-${item.amount}</Text>
+                <Text className='record-amount'>-￥{item.amount}</Text>
               </View>
             ))
           }
