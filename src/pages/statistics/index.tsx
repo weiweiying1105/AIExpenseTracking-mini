@@ -3,15 +3,7 @@ import { useState, useEffect } from 'react'
 import Taro, { useDidShow } from '@tarojs/taro'
 import { 
   Button, 
-  Cell, 
-  CellGroup, 
-  DatePicker,
-  Grid,
-  GridItem,
-  Tag,
-  Progress,
-  Empty,
-  Calendar
+  DatePicker
 } from '@nutui/nutui-react-taro'
 import { get } from '../../utils/request'
 import { eventBus, EVENT_NAMES } from '../../utils/eventBus'
@@ -106,7 +98,7 @@ const Statistics = () => {
         res.expenses.forEach((expense: ExpenseData) => {
         totalExpense += expense.amount
         const categoryName = expense.category && expense.category.name ? expense.category.name : '其他'
-        const categoryColor = expense.category && expense.category.color ? expense.category.color : '#4CAF50'
+        const categoryColor = expense.category && expense.category.color ? expense.category.color : '#667eea'
         
         if (categoryMap.has(categoryName)) {
           categoryMap.get(categoryName)!.amount += expense.amount
@@ -219,56 +211,99 @@ const Statistics = () => {
   }
 
   const formatCurrency = (amount: number) => {
-    return `¥${amount.toFixed(2)}`
+    return `-${amount.toFixed(2)}`
   }
-  const marginStyle = { margin: '8px' }
+
+  // 根据支出金额获取颜色深浅
+  const getExpenseColor = (amount: number) => {
+    if (amount === 0) return 'transparent'
+    const maxExpense = Math.max(...Object.values(getDailyExpenses()))
+    const intensity = Math.min(amount / maxExpense, 1)
+    const r = Math.floor(102 + (255 - 102) * (1 - intensity))
+    const g = Math.floor(126 + (255 - 126) * (1 - intensity))
+    const b = Math.floor(234 + (255 - 234) * (1 - intensity))
+    return `rgba(${r}, ${g}, ${b}, ${0.2 + intensity * 0.3})`
+  }
+  function goList(dateStr: string) {
+    Taro.navigateTo({
+      url: '/pages/list/index?month=' + dateStr
+    })
+  }
 
   return (
     <View className='statistics-container'>
-
-      <View className='main-content'>
-        {/* 月份/年份切换 */}
-        <View className='period-selector'>
-          <View className='period-tabs'>
-            <View className='tab active'>
-              <Text className='tab-text active'>Month</Text>
-            </View>
-            <View className='tab'>
-              <Text className='tab-text'>Year</Text>
-            </View>
+      {/* 页面头部 */}
+      <View className='page-header'>
+          {/* 月份选择器 */}
+        <View className='month-selector'>
+          <Button className='nav-btn' onClick={() => changeMonth(-1)}>
+            <Text className='nav-icon'>‹</Text>
+          </Button>
+          <View className='month-display'>
+            <Text className='month-text'>{formatMonth(currentDate)}</Text>
+          </View>
+          <Button className='nav-btn' onClick={() => changeMonth(1)}>
+            <Text className='nav-icon'>›</Text>
+          </Button>
+        </View>
+        {/* <Text className='header-title'>Statistics</Text> */}
+        <View className='header-summary'>
+          <View className='summary-card'>
+            <Text className='summary-label'>总支出</Text>
+            <Text className='summary-value'>{formatCurrency(monthlyData.totalExpense)}</Text>
+          </View>
+          <View className='summary-card'>
+            <Text className='summary-label'>日均</Text>
+            <Text className='summary-value'>{formatCurrency(monthlyData.avgDaily)}</Text>
+          </View>
+          <View className='summary-card'>
+            <Text className='summary-label'>笔数</Text>
+            <Text className='summary-value'>{monthlyData.expenseCount}</Text>
           </View>
         </View>
+      </View>
+
+      <View className='main-content'>
+      
 
         {/* 日历卡片 */}
         <View className='calendar-card'>
-          <View className='calendar-header'>
-            <Button className='nav-btn' onClick={() => changeMonth(-1)}>
-              <Text className='nav-icon'>‹</Text>
-            </Button>
-            <Text className='month-title'>{formatMonth(currentDate)}</Text>
-            <Button className='nav-btn' onClick={() => changeMonth(1)}>
-              <Text className='nav-icon'>›</Text>
-            </Button>
+          <View className='card-header'>
+            <Text className='card-title'>支出日历</Text>
           </View>
           
           <View className='calendar-grid'>
             {/* 星期标题 */}
-            <View className='weekday'>S</View>
-            <View className='weekday'>M</View>
-            <View className='weekday'>T</View>
-            <View className='weekday'>W</View>
-            <View className='weekday'>T</View>
-            <View className='weekday'>F</View>
-            <View className='weekday'>S</View>
+            <View className='weekday'>日</View>
+            <View className='weekday'>一</View>
+            <View className='weekday'>二</View>
+            <View className='weekday'>三</View>
+            <View className='weekday'>四</View>
+            <View className='weekday'>五</View>
+            <View className='weekday'>六</View>
             
             {/* 日历日期 */}
             {generateCalendarData().map((dayData, index) => (
-              <View key={index} className={`calendar-day ${dayData.isEmpty ? 'empty' : ''} ${dayData.isToday ? 'today' : ''}`}>
+              <View 
+                key={index} 
+                className={`calendar-day ${dayData.isEmpty ? 'empty' : ''} ${dayData.isToday ? 'today' : ''} ${dayData.amount > 0 ? 'has-expense' : ''}`}
+                onClick={() => {
+                  if (!dayData.isEmpty) {
+                    const year = currentDate.getFullYear()
+                    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0')
+                    const day = dayData.day.toString().padStart(2, '0')
+                    const dateStr = `${year}-${month}-${day}`
+                    goList(dateStr)
+                  }
+                }}
+              >
                 {!dayData.isEmpty && (
                   <>
-                    <Text className='day-number'>{dayData.day}</Text>
+                    <Text className={`day-number ${dayData.isToday ? 'today-number' : ''}`}>{dayData.day}</Text>
                     {dayData.amount > 0 && (
-                      <Text className='day-amount'>{formatCurrency(dayData.amount)}</Text>
+                      <View className='expense-indicator'>
+                        <Text className={`day-amount ${dayData.isToday ? 'today-amount' : ''}`}>{formatCurrency(dayData.amount)}</Text>
+                      </View>
                     )}
                   </>
                 )}
@@ -277,30 +312,53 @@ const Statistics = () => {
           </View>
         </View>
 
-        {/* 统计卡片 */}
-        <View className={monthlyData.categories.length > 0 ? 'stats-card' : 'stats-card hidden'}>
-          {monthlyData.categories.map((category, index) => (
-            <View key={index} className='stat-item'>
-              <View className='stat-header'>
-                <Text className='stat-label'>{category.name}</Text>
-                <Text className='stat-value'>￥{category.amount.toFixed(2)}</Text>
-              </View>
-              <View className='progress-bar'>
-                <View 
-                  className='progress-fill' 
-                  style={{
-                    width: `${category.percentage}%`,
-                    backgroundColor: category.color
-                  }}
-                ></View>
-              </View>
-              {/* <Text className='stat-percentage'>{category.percentage.toFixed(1)}%</Text> */}
+        {/* 分类统计卡片 */}
+        {monthlyData.categories.length > 0 ? (
+          <View className='categories-card'>
+            <View className='card-header' onClick={() => {
+              const year = currentDate.getFullYear();
+              const month = currentDate.getMonth() < 9 ? `0${currentDate.getMonth() + 1}` : `${currentDate.getMonth() + 1}`;
+              goList(`${year}-${month}`);
+            }}>
+              <Text className='card-title'>{currentDate.getMonth() + 1}月分类统计</Text>
+             {monthlyData.categories.length > 0 && (
+               <Text className='card-label'>明细列表&nbsp;&gt;</Text>
+             )}
             </View>
-          ))}
-        </View>
+            <View className='categories-list'>
+              {monthlyData.categories.map((category, index) => (
+                <View key={index} className='category-item' animation={`fadeInUp ${index * 0.1 + 0.3}s ease-out`}>
+                  <View className='category-header'>
+                    <View className='category-info'>
+                      {/* <View className='category-dot' style={{ backgroundColor: category.color }}></View> */}
+                      <Text className='category-name'>{category.name}</Text>
+                    </View>
+                    <View className='category-stats'>
+                      <Text className='category-amount'>{formatCurrency(category.amount)}</Text>
+                      <Text className='category-percentage'>{category.percentage.toFixed(1)}%</Text>
+                    </View>
+                  </View>
+                  <View className='category-progress'>
+                    <View 
+                      className='progress-fill' 
+                      style={{
+                        width: `${category.percentage}%`,
+                        backgroundColor: category.color
+                      }}
+                    ></View>
+                  </View>
+                </View>
+              ))}
+            </View>
+          </View>
+        ) : (
+          <View className='empty-state'>
+            <Text className='empty-icon'>📊</Text>
+            <Text className='empty-text'>暂无统计数据</Text>
+            <Text className='empty-hint'>添加一些支出记录来查看统计信息</Text>
+          </View>
+        )}
       </View>
-
-   
 
       {/* 月份选择器 */}
       <DatePicker

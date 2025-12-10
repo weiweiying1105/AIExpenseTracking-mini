@@ -4,12 +4,13 @@
     "pages/profile/index",
     "pages/statistics/index",
     "pages/login/index",
-    "pages/setUserInfo/index"
+    "pages/setUserInfo/index",
+    "pages/list/index"
   ],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "AI记账助手",
+    "navigationBarTitleText": "AI帮我记账",
     "navigationBarTextStyle": "black"
   },
   "tabBar": {
@@ -21,20 +22,20 @@
       {
         "pagePath": "pages/expense/index",
         "text": "记账",
-        "iconPath": "assets/icons/accounting.png",
-        "selectedIconPath": "assets/icons/accounting.png"
+        "iconPath": "src/assets/icons/accounting.png",
+        "selectedIconPath": "src/assets/icons/accounting-active.png"
       },
       {
         "pagePath": "pages/statistics/index",
         "text": "统计",
-        "iconPath": "assets/icons/statistics.png",
-        "selectedIconPath": "assets/icons/statistics.png"
+        "iconPath": "src/assets/icons/statistics.png",
+        "selectedIconPath": "src/assets/icons/statistics-active.png"
       },
       {
         "pagePath": "pages/profile/index",
         "text": "我的",
-        "iconPath": "assets/icons/profile.png",
-        "selectedIconPath": "assets/icons/profile.png"
+        "iconPath": "src/assets/icons/profile.png",
+        "selectedIconPath": "src/assets/icons/profile-active.png"
       }
     ]
   }

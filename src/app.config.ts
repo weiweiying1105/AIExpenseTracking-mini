@@ -5,6 +5,7 @@ export default {
     "pages/profile/index",
     "pages/login/index",
     "pages/setUserInfo/index",
+    "pages/list/index",
   ],
   window: {
     backgroundTextStyle: "light",
@@ -14,7 +15,7 @@ export default {
   },
   tabBar: {
     color: "#666",
-    selectedColor: "#1296db",
+    selectedColor: "#667eea",
     backgroundColor: "#fafafa",
     borderStyle: "black",
     list: [
@@ -22,19 +23,19 @@ export default {
         pagePath: "pages/expense/index",
         text: "记账",
         iconPath: "assets/icons/accounting.png",
-        selectedIconPath: "assets/icons/accounting.png"
+        selectedIconPath: "assets/icons/accounting-active.png"
       },
       {
         pagePath: "pages/statistics/index",
         text: "统计",
         iconPath: "assets/icons/statistics.png",
-        selectedIconPath: "assets/icons/statistics.png"
+        selectedIconPath: "assets/icons/statistics-active.png"
       },
       {
         pagePath: "pages/profile/index",
         text: "我的",
         iconPath: "assets/icons/profile.png",
-        selectedIconPath: "assets/icons/profile.png"
+        selectedIconPath: "assets/icons/profile-active.png"
       }
     ]
   }

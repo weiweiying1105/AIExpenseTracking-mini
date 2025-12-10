@@ -49,8 +49,6 @@ export default defineConfig<'webpack5'>(async (merge, { command, mode }) => {
     },
     mini: {
       postcss: {
-        // 开启 Tailwind
-        tailwindcss: {},
         autoprefixer: {
           enable: true,
           config: {}

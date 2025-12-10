@@ -42,7 +42,7 @@ const Accounting = () => {
     const end = date
     // 获取指定日期的支出
     get('/expense/range?startDate=' + start + '&endDate=' + end).then(res => {
-      // console.log('获取指定日期账单:', res)
+      console.log('获取指定日期账单:', res)
       setExpenseList(res.expenses)
       setSummary(res.summary)
     })
@@ -85,70 +85,96 @@ const Accounting = () => {
 
   return (
     <View className='accounting-container'>
-      {/* 主要内容区域 */}
-      <View style={{ flex: 1, overflowY: 'auto', }}>
-        {/* 日期选择 */}
-        <View className='date-container'>
-          <View className='input-group'>
-            <Text className='label'>Date</Text>
-            <Picker
-              mode='date'
-              value={selectedDate}
-              onChange={(e) => setSelectedDate(e.detail.value)}
-            >
-              <View className='picker-display'>
-                <Text>{selectedDate}</Text>
-              </View>
-            </Picker>
+      {/* 页面头部 */}
+   {/*    <View className='page-header'>
+        {summary && (
+          <View className='header-summary'>
+            <Text className='summary-label'>今日总支出</Text>
+            <Text className='summary-amount'>￥{summary.totalAmount.toFixed(2)}</Text>
           </View>
+        )}
+      </View>*/}
+
+      {/* 主要内容区域 */}
+      <View className='main-content'>
+        {/* 日期选择卡片 */}
+        <View className='date-card'>
+          {/* <View className='card-header'>
+            <Text className='card-title'>选择日期</Text>
+          </View> */}
+          <Picker
+            mode='date'
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.detail.value)}
+          >
+            <View className='date-picker'>
+              <Text className='date-icon'>📅</Text>
+              <Text className='date-text'>{selectedDate}</Text>
+              <Text className='date-arrow'>›</Text>
+            </View>
+          </Picker>
         </View>
         
-        {/* 表单区域 */}
-        <View className='form-section'>
-         
-          <View className='input-group'>
-            <Text className='label'>Description</Text>
-            <Textarea
-              className='desc-textarea'
-              placeholder='请输入消费描述'
-              value={description}
-              onInput={(e) => setDescription(e.detail.value)}
-              maxlength={200}
-              showConfirmBar={false}
-              autoHeight
-            />
+        {/* 表单卡片 */}
+        <View className='form-card'>
+          <View className='card-header'>
+            <Text className='card-title'>添加支出</Text>
           </View>
+          <View className='form-content'>
+            <View className='input-group'>
+              <Textarea
+                className='desc-textarea'
+                placeholder='填写消费描述。例如：午餐、交通、购物等'
+                value={description}
+                onInput={(e) => setDescription(e.detail.value)}
+                maxlength={200}
+                showConfirmBar={false}
+                autoHeight
+              />
+            </View>
 
-          <Button 
-            className='submit-btn' 
-            onClick={handleSubmit}
-            loading={loading}
-            disabled={loading}
-          >
-            {loading ? '记录中...' : 'Submit'}
-          </Button>
+            <Button 
+              className='submit-btn' 
+              onClick={handleSubmit}
+              loading={loading}
+              disabled={loading}
+            >
+              {loading ? '记录中...' : '保存记录'}
+            </Button>
+          </View>
         </View>
 
         {/* 交易记录区域 */}
-        <View className='recent-section'>
-          {
-            expenseList.map((item) => (
-              <View className='record-item' key={item.id}>
-                <View className='record-info'>
-                  <View className='record-icon'>💳</View>
+        <View className='records-section'>
+          <View className='section-header'>
+            <Text className='section-title'>今日交易</Text>
+            <Text className='record-count'>总支出{summary?.totalAmount&&summary?.totalAmount>0?'-':''}￥{summary?.totalAmount?.toFixed(2) || '0.00'}</Text>
+          </View>
+          
+          {expenseList.length > 0 ? (
+            <View className='records-list'>
+              {expenseList.map((item, index) => (
+                <View className='record-item' key={item.id} animation={`fadeInUp ${index * 0.1 + 0.3}s ease-out`}>
+                  {/* <View className='record-icon-wrapper'>
+                    <View className='record-icon'>💳</View>
+                  </View> */}
                   <View className='record-details'>
                     <Text className='record-desc'>{item.description}</Text>
-                    <Text className='record-date'>{formatDate(new Date(item.date), 'MMM dd, yyyy')}</Text>
+                    <Text className='record-date'>{formatDate(new Date(item.date), 'HH:mm', true)}</Text>
                   </View>
+                  <Text className='record-amount'>-￥{item?.amount}</Text>
                 </View>
-                <Text className='record-amount'>-￥{item.amount}</Text>
-              </View>
-            ))
-          }
+              ))}
+            </View>
+          ) : (
+            <View className='empty-state'>
+              <Text className='empty-icon'>📝</Text>
+              <Text className='empty-text'>暂无交易记录</Text>
+              <Text className='empty-hint'>点击上方添加您的第一条支出</Text>
+            </View>
+          )}
         </View>
       </View>
-
-     
     </View>
   )
 }

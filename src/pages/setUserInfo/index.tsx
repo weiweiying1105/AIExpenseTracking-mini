@@ -177,7 +177,7 @@ const SetUserInfo: React.FC = () => {
   }
 
   return (
-    <View className='set-user-info'>
+    <View className={`set-user-info ${loading ? 'loading' : ''}`}>
       <View className='header'>
         <Text className='title'>设置用户信息</Text>
       </View>
@@ -188,11 +188,10 @@ const SetUserInfo: React.FC = () => {
           <Text className='section-title'>头像</Text>
           <View className='avatar-container'>
             <Button 
-              className='avatar-btn p-0'
+              className='avatar-btn'
               openType='chooseAvatar'
               onChooseAvatar={handleChooseAvatar}
               disabled={loading}
-
             >
               {userInfo.avatarUrl ? (
                 <Image 
@@ -210,7 +209,7 @@ const SetUserInfo: React.FC = () => {
         </View>
 
         {/* 昵称设置 */}
-        <View className='nickname-section box-border'>
+        <View className='nickname-section'>
           <Text className='section-title'>昵称</Text>
           <Input
             className='nickname-input'
@@ -219,6 +218,7 @@ const SetUserInfo: React.FC = () => {
             value={userInfo.nickName}
             onInput={handleNicknameInput}
             maxlength={20}
+            focus={false}
           />
         </View>
       </View>
@@ -228,6 +228,7 @@ const SetUserInfo: React.FC = () => {
         <Button 
           className='btn btn-secondary'
           onClick={handleGoBack}
+          disabled={loading}
         >
           返回
         </Button>

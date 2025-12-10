@@ -18,6 +18,32 @@
     "ignoreDevUnusedFiles": true,
     "bigPackageSizeSupport": false
   },
-  "condition": {},
+  "condition": {
+    "miniprogram": {
+      "list": [
+        {
+          "name": "pages/setUserInfo/index",
+          "pathName": "pages/setUserInfo/index",
+          "query": "",
+          "scene": null,
+          "launchMode": "default"
+        },
+        {
+          "name": "pages/list/index",
+          "pathName": "pages/list/index",
+          "query": "month=2025-12",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "pages/statistics/index",
+          "pathName": "pages/statistics/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        }
+      ]
+    }
+  },
   "libVersion": "3.12.1"
 }

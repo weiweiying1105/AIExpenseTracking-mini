@@ -57,13 +57,14 @@ const request = async <T = any>(config: RequestConfig): Promise<T> => {
   if (token) {
     header.Authorization = `Bearer ${token}`
   }else{
-    debugger
      try{
         const res = await Taro.login()
         if(res.code){
+          console.log('登录成功，获取到code:', res.code)
           const loginRes = await callLoginApi({
             code: res.code
           })
+          console.log('登录成功，获取到token:', loginRes.token)
           if(loginRes.token){
             token = loginRes.token
             Taro.setStorageSync('token', loginRes.token)
@@ -201,6 +202,7 @@ const handleTokenRefresh = async <T = any>(originalRequest: RequestConfig): Prom
   if (!oldToken) {
     // 没有token，跳转登录
     console.log('没有oldToken，跳转登录页')
+    debugger
     redirectToLogin()
     throw new Error('请先登录')
   }
@@ -212,7 +214,7 @@ const handleTokenRefresh = async <T = any>(originalRequest: RequestConfig): Prom
     console.log('isRefreshing为true，将请求加入队列')
     return new Promise<T>((resolve, reject) => {
       console.log('刷新token中...，当前队列:', requestQueue)
-      debugger;
+      // debugger;
       requestQueue.push(() => {
         console.log('队列中的请求开始执行')
         resolve(request(originalRequest))
