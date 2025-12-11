@@ -6,8 +6,8 @@
     "urlCheck": false,
     "coverView": true,
     "lazyloadPlaceholderEnable": false,
-    "skylineRenderEnable": false,
-    "preloadBackgroundData": false,
+    "skylineRenderEnable": true,
+    "preloadBackgroundData": true,
     "autoAudits": false,
     "useApiHook": true,
     "showShadowRootInWxmlPanel": false,
@@ -18,6 +18,16 @@
     "ignoreDevUnusedFiles": true,
     "bigPackageSizeSupport": false
   },
+  "networkTimeout": {
+    "request": 30000,
+    "downloadFile": 30000
+  },
+  "requestDomain": [
+    "https://aiexpensetrackingserver.vercel.app"
+  ],
+  "socketDomain": [],
+  "uploadFileDomain": [],
+  "downloadFileDomain": [],
   "condition": {
     "miniprogram": {
       "list": [

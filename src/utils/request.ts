@@ -33,8 +33,8 @@ const BASE_URL = process.env.NODE_ENV === 'development'
   ? 'http://localhost:3000/api'
   : 'https://aiexpensetrackingserver.vercel.app/api'
 
-const DEFAULT_TIMEOUT = 300000
-let token =  Taro.getStorageSync('token') || ''
+const DEFAULT_TIMEOUT = 30000
+let token = Taro.getStorageSync('token') || ''
 // Token刷新状态管理
 let isRefreshing = false; // 是否正在刷新token
 let refreshFailed = false; // 是否刷新token失败
@@ -43,11 +43,11 @@ let requestQueue: Array<() => void> = [];// 刷新token后重新请求的队列
 // 封装的请求函数
 const request = async <T = any>(config: RequestConfig): Promise<T> => {
   // 如果刷新token失败，直接拒绝
-  if(refreshFailed) {
+  if (refreshFailed) {
     throw new Error('Token刷新失败')
   }
   // 动态获取最新的token
-  
+
 
   const header: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -56,25 +56,25 @@ const request = async <T = any>(config: RequestConfig): Promise<T> => {
 
   if (token) {
     header.Authorization = `Bearer ${token}`
-  }else{
-     try{
-        const res = await Taro.login()
-        if(res.code){
-          console.log('登录成功，获取到code:', res.code)
-          const loginRes = await callLoginApi({
-            code: res.code
-          })
-          console.log('登录成功，获取到token:', loginRes.token)
-          if(loginRes.token){
-            token = loginRes.token
-            Taro.setStorageSync('token', loginRes.token)
-            // 获取到token后，更新请求头并继续发起请求
-            header.Authorization = `Bearer ${token}`
-          }
+  } else {
+    try {
+      const res = await Taro.login()
+      if (res.code) {
+        console.log('登录成功，获取到code:', res.code)
+        const loginRes = await callLoginApi({
+          code: res.code
+        })
+        console.log('登录成功，获取到token:', loginRes.token)
+        if (loginRes.token) {
+          token = loginRes.token
+          Taro.setStorageSync('token', loginRes.token)
+          // 获取到token后，更新请求头并继续发起请求
+          header.Authorization = `Bearer ${token}`
         }
-      }catch(error){
-        console.error('登录失败', error)
       }
+    } catch (error) {
+      console.error('登录失败', error)
+    }
   }
 
   // 显示加载提示
@@ -210,7 +210,7 @@ const handleTokenRefresh = async <T = any>(originalRequest: RequestConfig): Prom
   console.log('当前isRefreshing状态:', isRefreshing)
   console.log('当前requestQueue长度:', requestQueue.length)
 
-  if(isRefreshing){
+  if (isRefreshing) {
     console.log('isRefreshing为true，将请求加入队列')
     return new Promise<T>((resolve, reject) => {
       console.log('刷新token中...，当前队列:', requestQueue)
@@ -223,56 +223,56 @@ const handleTokenRefresh = async <T = any>(originalRequest: RequestConfig): Prom
   } else {
     console.log('isRefreshing为false，开始刷新token')
     isRefreshing = true
-    
-    try {
-    // 调用刷新token接口
-    const refreshResponse = await Taro.request({
-      url: `${BASE_URL}/auth/refresh`,
-      method: 'POST',
-      data: { token: oldToken },
-      header: { 'Content-Type': 'application/json' }
-    })
 
-    if (refreshResponse.statusCode === 200) {
-      const newToken = refreshResponse.data.data.token
-      Taro.setStorageSync('token', newToken);
-      refreshFailed = false; // 刷新成功，重置失败标记
-       // 重新发送队列中的所有请求
-      requestQueue.forEach(callback => callback())
-      requestQueue = [] // 清空队列
-      // 重新发送原始请求
-      const newConfig = {
-        ...originalRequest,
-        header: {
-          ...originalRequest.header,
-          Authorization: `Bearer ${newToken}`
+    try {
+      // 调用刷新token接口
+      const refreshResponse = await Taro.request({
+        url: `${BASE_URL}/auth/refresh`,
+        method: 'POST',
+        data: { token: oldToken },
+        header: { 'Content-Type': 'application/json' }
+      })
+
+      if (refreshResponse.statusCode === 200) {
+        const newToken = refreshResponse.data.data.token
+        Taro.setStorageSync('token', newToken);
+        refreshFailed = false; // 刷新成功，重置失败标记
+        // 重新发送队列中的所有请求
+        requestQueue.forEach(callback => callback())
+        requestQueue = [] // 清空队列
+        // 重新发送原始请求
+        const newConfig = {
+          ...originalRequest,
+          header: {
+            ...originalRequest.header,
+            Authorization: `Bearer ${newToken}`
+          }
         }
+        return request(newConfig)
+      } else {
+        throw new Error('刷新token失败')
       }
-      return request(newConfig)
-    } else {
-      throw new Error('刷新token失败')
+    } catch (refreshError) {
+      // 刷新失败，清除本地数据并跳转登录
+      Taro.removeStorageSync('token')
+      Taro.removeStorageSync('userInfo')
+      refreshFailed = true; // 标记刷新失败
+      requestQueue.forEach(callback => callback()) // // 执行队列中的请求，但它们会因为refreshFailed为true而失败
+      requestQueue = [] // 清空队列
+      redirectToLogin()
+      throw refreshError
+    } finally {
+      // 无论成功失败，都重置刷新状态
+      isRefreshing = false
+      console.log('finally块执行，重置isRefreshing为false')
     }
-  } catch (refreshError) {
-    // 刷新失败，清除本地数据并跳转登录
-    Taro.removeStorageSync('token')
-    Taro.removeStorageSync('userInfo')
-    refreshFailed = true; // 标记刷新失败
-    requestQueue.forEach(callback => callback()) // // 执行队列中的请求，但它们会因为refreshFailed为true而失败
-    requestQueue = [] // 清空队列
-    redirectToLogin()
-    throw refreshError
-  } finally {
-    // 无论成功失败，都重置刷新状态
-    isRefreshing = false
-    console.log('finally块执行，重置isRefreshing为false')
   }
-}
 }
 const redirectToLogin = () => {
   // 防止重复跳转
   if (!redirectToLogin.redirecting) {
     redirectToLogin.redirecting = true
-    
+
     Taro.showToast({
       title: '登录已过期，请重新登录',
       icon: 'none'
@@ -296,8 +296,16 @@ export default request
 
 // 导出常用的请求方法
 export const get = <T = any>(url: string, params?: any): Promise<T> => {
+  let fullUrl = url
+  if (params) {
+    // 使用小程序兼容的方式拼接查询参数
+    const queryParams = Object.keys(params).map(key => {
+      return `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`
+    }).join('&')
+    fullUrl = `${url}${url.includes('?') ? '&' : '?'}${queryParams}`
+  }
   const config: RequestConfig = {
-    url: params ? `${url}?${new URLSearchParams(params).toString()}` : url,
+    url: fullUrl,
     method: 'GET'
   }
   return request<T>(config)

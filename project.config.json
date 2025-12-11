@@ -2,11 +2,11 @@
   "miniprogramRoot": "dist/",
   "projectname": "ai-accounting-miniapp",
   "description": "",
-  "appid": "wxa585c2c210b75c38",
+  "appid": "wx3e93589761971973",
   "setting": {
     "urlCheck": false,
-    "es6": false,
-    "enhance": false,
+    "es6": true,
+    "enhance": true,
     "compileHotReLoad": true,
     "postcss": false,
     "preloadBackgroundData": false,
@@ -33,7 +33,7 @@
     "localPlugins": false,
     "disableUseStrict": false,
     "useCompilerPlugins": false,
-    "condition": false,
+    "condition": true,
     "swc": false,
     "disableSWC": true
   },
