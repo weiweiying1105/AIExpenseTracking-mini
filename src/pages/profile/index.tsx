@@ -146,7 +146,7 @@ const Profile = () => {
           <View className='user-avatar' style={`background-image: url(${userInfo.avatarUrl || 'https://lh3.googleusercontent.com/aida-public/AB6AXuBzaO5jHM9lA6wqxHloI0fb7uaoEjWRa7CcnVrj-hqgPLWy2S4KVnoE9kQ1uSPClgBMhbwnI1YBHi6vAalop8FQhp6ctG3-yNlSNcy90uzXsf5cXSataaB7huw463S-yT3alASzp1RS8leVqWQ7OGJesScEu-Tw8gJVT_jZFUpECKWWLE1dfI0JymzeKmUda77TBkTFwCZnSkDrliim8lprkTjH6j-IbHof2xOGLAJwjvECnbCSa4X6hgGLSp4ghWa1mhkh7u7JBqY'})`}></View>
         </View>
         <View className='user-info-text'>
-          <Text className='user-name'>{userInfo.nickName || 'Sophia'}</Text>
+          <Text className='user-name'>{userInfo.nickName || '微信用户'}</Text>
           {/* <Text className='user-handle'>@{userInfo.nickName ? userInfo.nickName.toLowerCase() : 'sophia.c'}</Text> */}
         </View>
       </View>

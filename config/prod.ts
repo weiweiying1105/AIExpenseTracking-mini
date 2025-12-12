@@ -2,7 +2,7 @@ import type { UserConfigExport } from "@tarojs/cli";
 export default {
   defineConstants: {
     //  生产环境
-    API_BASE_URL: '"https://aiexpensetrackingserver.vercel.app/api"'
+    API_BASE_URL: '"https://www.wwycoding.com/api"'
   },
   mini: {},
   h5: {

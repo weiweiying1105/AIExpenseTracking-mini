@@ -10,7 +10,6 @@ import React, { useState, useEffect } from 'react'
 import { View, Button, Text, Image } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { eventBus, EVENT_NAMES } from '../../utils/eventBus'
-import { post } from '../../utils/request'
 import './index.less'
 import { callLoginApi } from '../../api/user'
 interface UserInfo {
@@ -59,7 +58,7 @@ const Login: React.FC = () => {
       // 2. 调用后端登录接口，用code换取openid和token
       const loginData = {
         code: loginRes.code,
-        nickName: '微信用户', // 使用默认昵称
+        nickName: '', // 使用默认昵称
         avatarUrl: '' // 使用默认头像
       }
 
@@ -110,18 +109,11 @@ const Login: React.FC = () => {
 
 
   return (
-    <View className='login-container'>
+    <View className='login-page-container'>
       <View className='main-content'>
-        <View className='icon-container'>
-          <View className='wallet-icon'>
-            <Text className='icon-text'>💳</Text>
-          </View>
-        </View>
-        
-        <Text className='main-title'>Your Money Companion</Text>
-        
+        <Text className='main-title'>ai帮我记</Text>
         <Text className='description'>
-          A simple and cute way to track your expenses.
+          简单可爱的记账方式，让理财更轻松
         </Text>
         
         <View className='button-container'>
@@ -132,11 +124,19 @@ const Login: React.FC = () => {
             disabled={loading}
           >
             <View className='btn-content'>
-            
-              <Text className='btn-text'>{loading ? '授权中...' : '微信登录'}</Text>
+              <Text className='btn-text'>{loading ? '授权中...' : '微信一键登录'}</Text>
             </View>
           </Button>
         </View>
+      </View>
+      
+      <View className='footer'>
+        <Text className='footer-text'>
+          登录即表示同意
+          <Text className='agreement-link' onClick={() => Taro.navigateTo({ url: '/pages/privacy-policy/index' })}>《隐私政策》</Text>
+          和
+          <Text className='agreement-link' onClick={() => Taro.navigateTo({ url: '/pages/user-agreement/index' })}>《用户协议》</Text>
+        </Text>
       </View>
     </View>
   )

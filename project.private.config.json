@@ -7,7 +7,7 @@
     "coverView": true,
     "lazyloadPlaceholderEnable": false,
     "skylineRenderEnable": true,
-    "preloadBackgroundData": true,
+    "preloadBackgroundData": false,
     "autoAudits": false,
     "useApiHook": true,
     "showShadowRootInWxmlPanel": false,
@@ -55,5 +55,5 @@
       ]
     }
   },
-  "libVersion": "3.12.1"
+  "libVersion": "3.11.3"
 }

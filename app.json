@@ -5,7 +5,9 @@
     "pages/statistics/index",
     "pages/login/index",
     "pages/setUserInfo/index",
-    "pages/list/index"
+    "pages/list/index",
+    "pages/privacy-policy/index",
+    "pages/user-agreement/index"
   ],
   "window": {
     "backgroundTextStyle": "light",

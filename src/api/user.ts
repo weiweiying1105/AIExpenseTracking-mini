@@ -33,8 +33,8 @@ export const callLoginApi = async (loginData: { code: string; nickName?: string;
     if (loginData.avatarUrl) queryParams.append('avatarUrl', loginData.avatarUrl)
     
     const response = await Taro.request({
-      url: `${process.env.NODE_ENV === 'development' ? 'http://localhost:3000/api' : 'https://aiexpensetrackingserver.vercel.app/api'}/auth/login?${queryParams.toString()}`,
-      method: 'GET',
+      url: `${process.env.NODE_ENV === 'development' ? 'http://localhost:3000/api' : 'https://www.wwycoding.com/api'}/auth/login?${queryParams.toString()}`,
+      method: 'POST',
       header: {
         'Content-Type': 'application/json'
       }

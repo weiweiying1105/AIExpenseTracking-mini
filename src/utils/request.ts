@@ -31,7 +31,7 @@ enum ResponseCode {
 // 基础配置
 const BASE_URL = process.env.NODE_ENV === 'development'
   ? 'http://localhost:3000/api'
-  : 'https://aiexpensetrackingserver.vercel.app/api'
+  : 'https://www.wwycoding.com/api'
 
 const DEFAULT_TIMEOUT = 30000
 let token = Taro.getStorageSync('token') || ''
@@ -202,7 +202,7 @@ const handleTokenRefresh = async <T = any>(originalRequest: RequestConfig): Prom
   if (!oldToken) {
     // 没有token，跳转登录
     console.log('没有oldToken，跳转登录页')
-    debugger
+    // debugger
     redirectToLogin()
     throw new Error('请先登录')
   }
