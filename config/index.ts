@@ -32,6 +32,10 @@ export default defineConfig<'webpack5'>(async (merge, { command, mode }) => {
     },
     copy: {
       patterns: [
+        {
+          from: 'src/assets/images/',
+          to: 'dist/assets/images/'
+        }
       ],
       options: {
       }

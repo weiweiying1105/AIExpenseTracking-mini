@@ -1,4 +1,4 @@
-import { View, Text } from '@tarojs/components'
+import { View, Text, Image } from '@tarojs/components'
 import { useState, useEffect } from 'react'
 import Taro, { useDidShow } from '@tarojs/taro'
 import { 
@@ -8,7 +8,7 @@ import {
 import { get } from '../../utils/request'
 import { eventBus, EVENT_NAMES } from '../../utils/eventBus'
 import './index.less'
-
+import arrowIcon from '../../assets/images/arrow.svg'
 interface ExpenseData {
   id: string
   amount: number
@@ -322,7 +322,7 @@ const Statistics = () => {
             }}>
               <Text className='card-title'>{currentDate.getMonth() + 1}月分类统计</Text>
              {monthlyData.categories.length > 0 && (
-               <Text className='card-label'>明细列表&nbsp;&gt;</Text>
+               <view className='card-label'>明细列表<Image src={arrowIcon} className='arrow-icon' /></view>
              )}
             </View>
             <View className='categories-list'>

@@ -24,8 +24,9 @@ enum ResponseCode {
   FORBIDDEN = 403, // 禁止访问
   NOT_FOUND = 404, // 资源不存在
   SERVER_ERROR = 500, // 服务器错误
-  TOKEN_EXPIRED = 1001, // token过期
-  INVALID_PARAMS = 1002 // 参数无效
+  TOKEN_EXPIRED = 402, // token过期
+  USER_NOT_FOUND = 1002, // 用户不存在
+  INVALID_PARAMS = 400, // 参数错误
 }
 
 // 基础配置
@@ -108,7 +109,8 @@ const request = async <T = any>(config: RequestConfig): Promise<T> => {
     // 处理业务状态码
     const apiResponse = data as ApiResponse
     const { code, message, data: responseData } = apiResponse
-
+    // console.log('请求成功，返回apiResponse:', statusCode, 'code:', code, 'message:', message, 'data:', responseData)
+    // debugger
     switch (code) {
       case ResponseCode.SUCCESS:
         return responseData
@@ -117,7 +119,8 @@ const request = async <T = any>(config: RequestConfig): Promise<T> => {
         return handleTokenRefresh(config)
 
       case ResponseCode.UNAUTHORIZED:// 未授权，清除本地存储并跳转到登录页
-        // token过期或未授权，清除本地存储并跳转到登录页
+      case ResponseCode.USER_NOT_FOUND:// 用户不存在，清除本地存储并跳转到登录页
+        // token过期或未授权或用户不存在，清除本地存储并跳转到登录页
         Taro.removeStorageSync('token')
         Taro.removeStorageSync('userInfo')
         refreshFailed = true; // 标记刷新失败
@@ -127,8 +130,8 @@ const request = async <T = any>(config: RequestConfig): Promise<T> => {
           duration: 2000
         })
         setTimeout(() => {
-          Taro.switchTab({
-            url: '/pages/profile/index'
+          Taro.navigateTo({
+            url: '/pages/login/index'
           })
         }, 2000)
         throw new Error(message || '登录已过期')
@@ -279,7 +282,7 @@ const redirectToLogin = () => {
     })
 
     setTimeout(() => {
-      Taro.redirectTo({
+      Taro.navigateTo({
         url: '/pages/login/index'
       })
       redirectToLogin.redirecting = false

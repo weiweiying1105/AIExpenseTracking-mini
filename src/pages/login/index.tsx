@@ -12,10 +12,6 @@ import Taro from '@tarojs/taro'
 import { eventBus, EVENT_NAMES } from '../../utils/eventBus'
 import './index.less'
 import { callLoginApi } from '../../api/user'
-interface UserInfo {
-  nickName: string
-  avatarUrl: string
-}
 
 
 const Login: React.FC = () => {
@@ -58,8 +54,6 @@ const Login: React.FC = () => {
       // 2. 调用后端登录接口，用code换取openid和token
       const loginData = {
         code: loginRes.code,
-        nickName: '', // 使用默认昵称
-        avatarUrl: '' // 使用默认头像
       }
 
       const response = await callLoginApi(loginData)
@@ -69,8 +63,6 @@ const Login: React.FC = () => {
         Taro.setStorageSync('token', response.token)
         Taro.setStorageSync('userInfo', {
           openid: response.openid,
-          nickName: loginData.nickName,
-          avatarUrl: loginData.avatarUrl,
           ...response.userInfo
         })
 

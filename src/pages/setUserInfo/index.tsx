@@ -61,11 +61,16 @@ const SetUserInfo: React.FC = () => {
     uploadAvatarToServer(avatarUrl).then((permanentAvatarUrl) => {
       console.log('永久头像地址:', permanentAvatarUrl)
     
-      setUserInfo({
-        ...userInfo,
-        avatarUrl: permanentAvatarUrl
+      // 使用函数形式的setState确保获取最新状态
+      setUserInfo(prevState => {
+        const updatedUserInfo = {
+          ...prevState,
+          avatarUrl: permanentAvatarUrl
+        }
+        // 在setState回调中调用保存函数，确保使用最新的状态
+        handleSaveUserInfo(updatedUserInfo)
+        return updatedUserInfo
       })
-      handleSaveUserInfo()
     })
   }
   
@@ -105,14 +110,17 @@ const SetUserInfo: React.FC = () => {
       });
       
       // 更新头像URL
-      setUserInfo(prev => ({
-        ...prev,
-        avatarUrl: uploadResult
-      }));
-      Taro.setStorageSync('userInfo', {
-        ...userInfo,
-        avatarUrl: uploadResult
-      })
+      setUserInfo(prev => {
+        // 更新本地存储
+        Taro.setStorageSync('userInfo', {
+          ...prev,
+          avatarUrl: uploadResult
+        });
+        return {
+          ...prev,
+          avatarUrl: uploadResult
+        };
+      });
       Taro.showToast({
         title: '头像上传成功',
         icon: 'success'
@@ -144,17 +152,20 @@ const SetUserInfo: React.FC = () => {
   }
 
   // 保存用户信息
-  const handleSaveUserInfo =async () => {
+  const handleSaveUserInfo =async (data?: UserInfo) => {
+    // 使用传入的数据或当前状态
+    const currentUserInfo = data || userInfo
+    
     // 更新本地存储的用户信息
     const savedUserInfo = Taro.getStorageSync('userInfo') || {}
-    if (userInfo.nickName) {
-      savedUserInfo.nickName = userInfo.nickName
+    if (currentUserInfo.nickName) {
+      savedUserInfo.nickName = currentUserInfo.nickName
     }
-    if (userInfo.avatarUrl) {
-      savedUserInfo.avatarUrl = userInfo.avatarUrl
+    if (currentUserInfo.avatarUrl) {
+      savedUserInfo.avatarUrl = currentUserInfo.avatarUrl
     }
     const updatedUserInfo = {
-      ...savedUserInfo
+      ...currentUserInfo
     }
    const res = await put('/user/info', updatedUserInfo)
   console.log('更新用户信息成功:',res)
@@ -234,7 +245,7 @@ const SetUserInfo: React.FC = () => {
         </Button>
         <Button 
           className='btn btn-primary'
-          onClick={handleSaveUserInfo}
+          onClick={() => handleSaveUserInfo()}
           loading={loading}
         >
           保存

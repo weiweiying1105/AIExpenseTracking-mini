@@ -35,9 +35,9 @@ const Profile = () => {
     }
   }
 
-  useEffect(() => {
+  useDidShow(() => {
     loadUserInfo()
-  }, [])
+  })
 
   // 监听登录成功事件
   useEffect(() => {
@@ -53,10 +53,7 @@ const Profile = () => {
     }
   }, [])
 
-  // 页面显示时刷新数据
-  useDidShow(() => {
-    loadUserInfo()
-  })
+
 
   const handleLogin = async () => {
     try {
@@ -109,33 +106,57 @@ const Profile = () => {
 
 
 
+  const showWechatModal = () => {
+    Taro.showModal({
+      title: '联系我们',
+      content: '请添加微信号：17521699782',
+      showCancel: true,
+      cancelText: '取消',
+      confirmText: '复制',
+      success: (res) => {
+        if (res.confirm) {
+          // 复制微信号到剪贴板
+          Taro.setClipboardData({
+            data: '17521699782',
+            success: () => {
+              Taro.showToast({
+                title: '复制成功',
+                icon: 'success'
+              })
+            },
+            fail: () => {
+              Taro.showToast({
+                title: '复制失败，请手动输入',
+                icon: 'none'
+              })
+            }
+          })
+        }
+      }
+    })
+  }
+
   const handleFeedback = () => {
-    Taro.showToast({
-      title: '问题反馈功能开发中',
-      icon: 'none'
-    })
+    showWechatModal()
   }
 
-  const handleHelpCenter = () => {
-    Taro.showToast({
-      title: '帮助中心功能开发中',
-      icon: 'none'
-    })
-  }
+  // const handleHelpCenter = () => {
+  //   Taro.showToast({
+  //     title: '帮助中心功能开发中',
+  //     icon: 'none'
+  //   })
+  // }
 
-  const handleCooperation = () => {
-    Taro.showToast({
-      title: '我要合作功能开发中',
-      icon: 'none'
-    })
-  }
+  // const handleCooperation = () => {
+  //   showWechatModal()
+  // }
   // 跳转设置用户信息
   const handleUserInfo = () => {
     Taro.navigateTo({
       url: '/pages/setUserInfo/index'
     })
   }
-
+const DEFAULT_AVATOR_URL = 'https://res.cloudinary.com/dc6wdjxld/image/upload/v1765776810/lzf4i1mudiiiytacznih.jpg'
   return (
     <View className='flex-grow'>
     
@@ -143,7 +164,7 @@ const Profile = () => {
       {/* 用户信息区域 */}
       <View className='user-profile' onClick={userInfo.isLogin ? handleUserInfo : handleLogin}>
         <View className='avatar-section'>
-          <View className='user-avatar' style={`background-image: url(${userInfo.avatarUrl || 'https://lh3.googleusercontent.com/aida-public/AB6AXuBzaO5jHM9lA6wqxHloI0fb7uaoEjWRa7CcnVrj-hqgPLWy2S4KVnoE9kQ1uSPClgBMhbwnI1YBHi6vAalop8FQhp6ctG3-yNlSNcy90uzXsf5cXSataaB7huw463S-yT3alASzp1RS8leVqWQ7OGJesScEu-Tw8gJVT_jZFUpECKWWLE1dfI0JymzeKmUda77TBkTFwCZnSkDrliim8lprkTjH6j-IbHof2xOGLAJwjvECnbCSa4X6hgGLSp4ghWa1mhkh7u7JBqY'})`}></View>
+          <View className='user-avatar' style={`background-image: url(${userInfo.avatarUrl|| DEFAULT_AVATOR_URL})`}></View>
         </View>
         <View className='user-info-text'>
           <Text className='user-name'>{userInfo.nickName || '微信用户'}</Text>
@@ -154,22 +175,22 @@ const Profile = () => {
       {/* 功能菜单 */}
       <View className='navigation-menu'>
         <View className='menu-item' onClick={handleFeedback}>
-          <View className='menu-icon-wrapper'>
+          {/* <View className='menu-icon-wrapper'>
             <svg fill="currentColor" height="24px" viewBox="0 0 24 24" width="24px" xmlns="http://www.w3.org/2000/svg">
               <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/>
             </svg>
-          </View>
-          <Text className='menu-label'>问题反馈</Text>
+          </View> */}
+          <Text className='menu-label'>问题反馈/合作</Text>
         </View>
 
-        <View className='menu-item' onClick={handleCooperation}>
+        {/* <View className='menu-item' onClick={handleCooperation}>
           <View className='menu-icon-wrapper'>
             <svg fill="currentColor" height="24px" viewBox="0 0 24 24" width="24px" xmlns="http://www.w3.org/2000/svg">
               <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
             </svg>
           </View>
           <Text className='menu-label'>合作</Text>
-        </View>
+        </View> */}
 
         {/* <View className='menu-item' onClick={handleHelpCenter}>
           <View className='menu-icon-wrapper'>
