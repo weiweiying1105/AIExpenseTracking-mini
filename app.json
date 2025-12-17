@@ -12,7 +12,7 @@
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "AI帮我记账",
+    "navigationBarTitleText": "聊天记账",
     "navigationBarTextStyle": "black"
   },
   "tabBar": {

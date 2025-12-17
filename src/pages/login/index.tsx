@@ -103,7 +103,7 @@ const Login: React.FC = () => {
   return (
     <View className='login-page-container'>
       <View className='main-content'>
-        <Text className='main-title'>ai帮我记</Text>
+        <Text className='main-title'>聊天记账</Text>
         <Text className='description'>
           简单可爱的记账方式，让理财更轻松
         </Text>

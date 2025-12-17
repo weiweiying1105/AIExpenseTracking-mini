@@ -211,7 +211,7 @@ const Statistics = () => {
   }
 
   const formatCurrency = (amount: number) => {
-    return `-${amount.toFixed(2)}`
+    return `${amount > 0 ? '-' : ''}${amount.toFixed(2)}`
   }
 
   // 根据支出金额获取颜色深浅
