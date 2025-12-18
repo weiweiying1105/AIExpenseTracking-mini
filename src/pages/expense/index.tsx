@@ -168,7 +168,7 @@ const Accounting = () => {
                     <Text className='record-desc'>{item.description}</Text>
                     <Text className='record-date'>{formatDate(new Date(item.date), 'HH:mm', true)}</Text>
                   </View>
-                  <Text className='record-amount'>-￥{item?.amount}</Text>
+                  <Text className='record-amount'>-￥{item?.amount?.toFixed(2) || '0.00'}</Text>
                 </View>
               ))}
             </View>
