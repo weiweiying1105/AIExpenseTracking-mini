@@ -48,16 +48,18 @@ const Statistics = () => {
     expenses: []
   })
   const [loading, setLoading] = useState(false)
-
-  useEffect(() => {
-    loadMonthlyData()
-  }, [currentDate])
+  useDidShow(() => {
+    loadMonthlyData(currentDate)
+  })
+  // useEffect(() => {
+  //   loadMonthlyData()
+  // }, [currentDate])
 
   // 监听登录成功事件
   useEffect(() => {
     const handleLoginSuccess = () => {
       // 登录成功后刷新统计数据
-      loadMonthlyData()
+      loadMonthlyData(currentDate)
     }
 
     eventBus.on(EVENT_NAMES.LOGIN_SUCCESS, handleLoginSuccess)
@@ -71,7 +73,7 @@ const Statistics = () => {
   useEffect(() => {
     const handleTokenUpdated = () => {
       // token更新后刷新统计数据
-      loadMonthlyData()
+      loadMonthlyData(currentDate)
     }
 
     eventBus.on(EVENT_NAMES.TOKEN_UPDATED, handleTokenUpdated)
@@ -83,11 +85,11 @@ const Statistics = () => {
 
 
 
-  const loadMonthlyData = async () => {
+  const loadMonthlyData = async (newDate: Date = currentDate) => {
     setLoading(true)
     try {
-      const year = currentDate.getFullYear()
-      const month = currentDate.getMonth() < 9 ? `0${currentDate.getMonth() + 1}` : `${currentDate.getMonth() + 1}`
+      const year = newDate.getFullYear()
+      const month = newDate.getMonth() < 9 ? `0${newDate.getMonth() + 1}` : `${newDate.getMonth() + 1}`
       
       const res = await get(`/static?month=${year}-${month}`)
       
@@ -140,6 +142,7 @@ const Statistics = () => {
     const newDate = new Date(currentDate)
     newDate.setMonth(newDate.getMonth() + delta)
     setCurrentDate(newDate)
+    loadMonthlyData(newDate)
   }
 
   // 计算每天的支出
@@ -211,7 +214,7 @@ const Statistics = () => {
   }
 
   const formatCurrency = (amount: number) => {
-    return `${amount > 0 ? '-' : ''}${amount.toFixed(2)}`
+    return `${amount > 0 ? '-' : ''}￥${amount.toFixed(2)}`
   }
 
   // 根据支出金额获取颜色深浅

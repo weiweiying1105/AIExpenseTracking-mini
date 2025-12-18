@@ -20,15 +20,21 @@ const Accounting = () => {
     getExpenseListByDate(selectedDate)
   }, [selectedDate])
 
-  // 监听token更新事件，在token可用时刷新数据
+  // 监听登录成功和token更新事件，在登录或token可用时刷新数据
   useEffect(() => {
+    const handleLoginSuccess = () => {
+      getExpenseListByDate(selectedDate)
+    }
+    
     const handleTokenUpdated = () => {
       getExpenseListByDate(selectedDate)
     }
 
+    eventBus.on(EVENT_NAMES.LOGIN_SUCCESS, handleLoginSuccess)
     eventBus.on(EVENT_NAMES.TOKEN_UPDATED, handleTokenUpdated)
     
     return () => {
+      eventBus.off(EVENT_NAMES.LOGIN_SUCCESS, handleLoginSuccess)
       eventBus.off(EVENT_NAMES.TOKEN_UPDATED, handleTokenUpdated)
     }
   }, [selectedDate])
