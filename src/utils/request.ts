@@ -238,6 +238,8 @@ const handleTokenRefresh = async <T = any>(originalRequest: RequestConfig): Prom
 
       if (refreshResponse.statusCode === 200) {
         const newToken = refreshResponse.data.data.token
+        // 同时更新内存中的token变量和本地存储
+        token = newToken
         Taro.setStorageSync('token', newToken);
         refreshFailed = false; // 刷新成功，重置失败标记
         // 重新发送队列中的所有请求
