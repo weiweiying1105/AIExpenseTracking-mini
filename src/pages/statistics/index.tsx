@@ -256,7 +256,7 @@ const Statistics = () => {
                     <Text className={`day-number ${dayData.isToday ? 'today-number' : ''}`}>{dayData.day}</Text>
                     {dayData.amount > 0 && (
                       <View className='expense-indicator'>
-                        <Text className={`day-amount ${dayData.isToday ? 'today-amount' : ''}`}>{formatCurrency(dayData.amount)}</Text>
+                        <Text className={`day-amount ${dayData.isToday ? 'today-amount' : ''}`}>{dayData.amount.toFixed(2)}</Text>
                       </View>
                     )}
                   </>
