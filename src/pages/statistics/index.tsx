@@ -6,7 +6,6 @@ import {
   DatePicker
 } from '@nutui/nutui-react-taro'
 import { get } from '../../utils/request'
-import { eventBus, EVENT_NAMES } from '../../utils/eventBus'
 import './index.less'
 import arrowIcon from '../../assets/images/arrow.svg'
 interface ExpenseData {
