@@ -1,5 +1,5 @@
 import { View, Text, Button, Image } from '@tarojs/components'
-import Taro, { useDidShow } from '@tarojs/taro'
+import Taro, { useDidShow, usePullDownRefresh } from '@tarojs/taro'
 import './index.less'
 import { useState, useEffect } from 'react'
 import { userApi } from '../../utils/api'
@@ -37,6 +37,10 @@ const Profile = () => {
 
   useDidShow(() => {
     loadUserInfo()
+  })
+  usePullDownRefresh(() => {
+    loadUserInfo()
+    Taro.stopPullDownRefresh()
   })
 
   // 监听登录成功事件

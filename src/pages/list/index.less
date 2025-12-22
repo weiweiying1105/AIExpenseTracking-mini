@@ -11,11 +11,30 @@
 .page-header {
   background-color: #ffffff;
   padding: 32rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   border-bottom: 1rpx solid #f0f0f0;
   text-align: center;
   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
 }
+.sort-button {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #999999;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
 
+  &:hover {
+    color: #333333;
+  }
+
+  &.sort-button-active {
+    color: #667eea;
+  }
+}
 .month-title {
   font-size: 36rpx;
   font-weight: 700;
