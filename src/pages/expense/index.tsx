@@ -1,5 +1,5 @@
 import { View, Text, Button, Input, Textarea, Picker } from '@tarojs/components'
-import Taro, { useDidShow } from '@tarojs/taro'
+import Taro, { useDidShow, usePullDownRefresh } from '@tarojs/taro'
 import { useEffect, useState } from 'react'
 import { get, post } from '../../utils/request'
 import { eventBus, EVENT_NAMES } from '../../utils/eventBus'
@@ -16,6 +16,13 @@ const Accounting = () => {
     totalAmount: number
   }>()
   
+  // 下啦刷新（通过 hook 绑定事件）
+  usePullDownRefresh(() => {
+    getExpenseListByDate(selectedDate)
+      .finally(() => {
+        Taro.stopPullDownRefresh()
+      })
+  })
   useEffect(() => {
     getExpenseListByDate(selectedDate)
   }, [selectedDate])
@@ -160,13 +167,13 @@ const Accounting = () => {
           {expenseList.length > 0 ? (
             <View className='records-list'>
               {expenseList.map((item, index) => (
-                <View className='record-item' key={item.id} animation={`fadeInUp ${index * 0.1 + 0.3}s ease-out`}>
+                <View className='record-item fadeInUp' key={item.id} style={{ animationDelay: `${index * 0.1 + 0.3}s` }}>
                   {/* <View className='record-icon-wrapper'>
                     <View className='record-icon'>💳</View>
                   </View> */}
                   <View className='record-details'>
                     <Text className='record-desc'>{item.description}</Text>
-                    <Text className='record-date'>{formatDate(new Date(item.date), 'HH:mm', true)}</Text>
+                    <Text className='record-date'>{formatDate(new Date(item.date), 'HH:mm')}</Text>
                   </View>
                   <Text className='record-amount'>-￥{item?.amount?.toFixed(2) || '0.00'}</Text>
                 </View>

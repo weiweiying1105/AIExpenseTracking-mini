@@ -1,23 +1,39 @@
-import { useRouter } from "@tarojs/taro"
+import Taro, { usePullDownRefresh, useRouter } from "@tarojs/taro"
 import { useEffect, useState } from "react"
-import { View, Text, Button, Image } from '@tarojs/components'
+import { View, Text } from '@tarojs/components'
 import { get } from "src/utils/request";
 import { formatDate } from "src/utils/date";
 import './index.less'
 
+const List = () => {
+  // 获取路由上的参数
+  const { month: routeMonth } = useRouter().params as { month?: string };
+  const defaultMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
+  const displayMonth = routeMonth ?? defaultMonth;
 
- const List = () => {
-    // 获取路由上的参数
-  const {month} = useRouter().params;
-  const [expenseList, setExpenseList] = useState([])
+  const [expenseList, setExpenseList] = useState<any[]>([])
+  const [sortType, setSortType] = useState('')
+
   useEffect(() => {
-    if (month) {
-      getExpenseListByDate(month)
+    getExpenseListByDate(displayMonth)
+  },[sortType])
+  // 下拉刷新：使用页面的显示月份刷新
+  usePullDownRefresh(() => {
+    getExpenseListByDate(displayMonth)
+      .finally(() => {
+        Taro.stopPullDownRefresh()
+      })
+  })
+
+  useEffect(() => {
+    if (displayMonth) {
+      getExpenseListByDate(displayMonth)
     }
-  }, [month])
-  function getExpenseListByDate(dateStr: string) {
+  }, [displayMonth])
+
+  function getExpenseListByDate(dateStr: string): Promise<void> {
     // 获取指定日期的支出
-    get('/expense/list?month=' + dateStr).then(res => {
+    return get('/expense/list?month=' + dateStr + '&sort=' + sortType).then(res => {
       console.log('获取指定日期账单:', res);
       let expenses = res || [];
       // 如果传入的是完整日期格式，前端过滤只显示该日的记录
@@ -34,6 +50,7 @@ import './index.less'
       setExpenseList([]);
     })
   }
+
   // 格式化页面标题
   const formatPageTitle = (dateStr: string) => {
     if (!dateStr) return '';
@@ -50,30 +67,38 @@ import './index.less'
     return dateStr;
   };
 
+  const sortedExpenses = [...expenseList].sort((a: any, b: any) =>
+    sortType === 'asc' ? Number(a.amount) - Number(b.amount) : Number(b.amount) - Number(a.amount)
+  )
+
   return (
     <View className='list-container'>
       <View className='page-header'>
-        <Text className='month-title'>{formatPageTitle(month)}</Text>
+        <Text className='month-title'>{formatPageTitle(displayMonth)}</Text>
+        {/* 加一个排序按钮 */}
+        <p className={`sort-button ${sortType === 'desc' ? 'sort-button-active' : ''}`} onClick={() => setSortType(sortType === 'desc' ? '' : 'desc')}>
+          最大开销
+        </p>
       </View>
-      {expenseList.length > 0 ? (
+      {sortedExpenses.length > 0 ? (
         <View className='records-list'>
-          {expenseList.map((item, index) => (
-            <View className='record-item' key={item.id} animation={`fadeInUp ${index * 0.1 + 0.3}s ease-out`}>
+          {sortedExpenses.map((item, index) => (
+            <View className='record-item fadeInUp' key={item.id} style={{ animationDelay: `${index * 0.1 + 0.3}s` }}>
               {/* <View className='record-icon-wrapper'>
                 <View className='record-icon'>💳</View>
               </View> */}
               <View className='record-details'>
                 <Text className='record-desc'>{item.description}</Text>
-                <Text className='record-date'>{formatDate(new Date(item.date), 'yyyy-MM-dd HH:mm', true)}</Text>
+                <Text className='record-date'>{formatDate(new Date(item.date), 'yyyy-MM-dd HH:mm')}</Text>
               </View>
               <Text className='record-amount'>-￥{item?.amount}</Text>
             </View>
-          ))} 
+          ))}
         </View>
       ) : (
         <View className='empty-list'>
           <Text className='empty-text'>
-            {month.length === 10 ? '当日暂无支出记录' : '本月暂无支出记录'}
+            {displayMonth.length === 10 ? '当日暂无支出记录' : '本月暂无支出记录'}
           </Text>
         </View>
       )}

@@ -1,12 +1,11 @@
 import { View, Text, Image } from '@tarojs/components'
 import { useState, useEffect } from 'react'
-import Taro, { useDidShow } from '@tarojs/taro'
+import Taro, { useDidShow, usePullDownRefresh } from '@tarojs/taro'
 import { 
   Button, 
   DatePicker
 } from '@nutui/nutui-react-taro'
 import { get } from '../../utils/request'
-import { eventBus, EVENT_NAMES } from '../../utils/eventBus'
 import './index.less'
 import arrowIcon from '../../assets/images/arrow.svg'
 interface ExpenseData {
@@ -48,80 +47,56 @@ const Statistics = () => {
     expenses: []
   })
   const [loading, setLoading] = useState(false)
+
+  // 下拉刷新：刷新当前月份统计
+  usePullDownRefresh(() => {
+    loadMonthlyData().finally(() => {
+      Taro.stopPullDownRefresh()
+    })
+  })
+
+  // 页面显示时刷新一次
   useDidShow(() => {
     loadMonthlyData(currentDate)
   })
-  // useEffect(() => {
-  //   loadMonthlyData()
-  // }, [currentDate])
 
-  // 监听登录成功事件
+  // 当前月份变化时刷新
   useEffect(() => {
-    const handleLoginSuccess = () => {
-      // 登录成功后刷新统计数据
-      loadMonthlyData(currentDate)
-    }
-
-    eventBus.on(EVENT_NAMES.LOGIN_SUCCESS, handleLoginSuccess)
-
-    return () => {
-      eventBus.off(EVENT_NAMES.LOGIN_SUCCESS, handleLoginSuccess)
-    }
+    loadMonthlyData(currentDate)
   }, [currentDate])
 
-  // 监听token更新事件，在token可用时刷新数据
-  useEffect(() => {
-    const handleTokenUpdated = () => {
-      // token更新后刷新统计数据
-      loadMonthlyData(currentDate)
-    }
-
-    eventBus.on(EVENT_NAMES.TOKEN_UPDATED, handleTokenUpdated)
-
-    return () => {
-      eventBus.off(EVENT_NAMES.TOKEN_UPDATED, handleTokenUpdated)
-    }
-  }, [currentDate])
-
-
-
+  // 加载某月统计数据
   const loadMonthlyData = async (newDate: Date = currentDate) => {
     setLoading(true)
     try {
       const year = newDate.getFullYear()
       const month = newDate.getMonth() < 9 ? `0${newDate.getMonth() + 1}` : `${newDate.getMonth() + 1}`
-      
       const res = await get(`/static?month=${year}-${month}`)
-      
       // 处理分类统计
       const categoryMap = new Map<string, { amount: number, color: string }>()
       let totalExpense = 0
-      if(res && res.expenses){
+      if (res && res.expenses) {
         res.expenses.forEach((expense: ExpenseData) => {
-        totalExpense += expense.amount
-        const categoryName = expense.category && expense.category.name ? expense.category.name : '其他'
-        const categoryColor = expense.category && expense.category.color ? expense.category.color : '#667eea'
-        
-        if (categoryMap.has(categoryName)) {
-          categoryMap.get(categoryName)!.amount += expense.amount
-        } else {
-          categoryMap.set(categoryName, { amount: expense.amount, color: categoryColor })
-        }
-      })
-    }
-      
+          totalExpense += expense.amount
+          const categoryName = expense.category && expense.category.name ? expense.category.name : '其他'
+          const categoryColor = expense.category && expense.category.color ? expense.category.color : '#667eea'
+          if (categoryMap.has(categoryName)) {
+            categoryMap.get(categoryName)!.amount += expense.amount
+          } else {
+            categoryMap.set(categoryName, { amount: expense.amount, color: categoryColor })
+          }
+        })
+      }
       const categories: CategoryStat[] = Array.from(categoryMap.entries()).map(([name, data]) => ({
         name,
         amount: data.amount,
         color: data.color,
         percentage: totalExpense > 0 ? (data.amount / totalExpense) * 100 : 0
       })).sort((a, b) => b.amount - a.amount)
-      
       const daysInMonth = new Date(year, parseInt(month) + 1, 0).getDate()
-      
       setMonthlyData({
         totalExpense,
-        totalIncome: 0, // 暂时设为0，可以后续添加收入功能
+        totalIncome: 0,
         expenseCount: res.expenses ? res.expenses.length : 0,
         avgDaily: totalExpense / daysInMonth,
         categories,
@@ -151,34 +126,27 @@ const Statistics = () => {
     const month = currentDate.getMonth()
     const daysInMonth = new Date(year, month + 1, 0).getDate()
     const dailyExpenses: { [key: number]: number } = {}
-    
-    // 初始化每天为0
     for (let day = 1; day <= daysInMonth; day++) {
       dailyExpenses[day] = 0
     }
-    
-    // 计算每天的支出总额
     if (monthlyData && monthlyData.expenses) {
       monthlyData.expenses.forEach(expense => {
-      const expenseDate = new Date(expense.date)
-      if (expenseDate.getFullYear() === year && expenseDate.getMonth() === month) {
-        const day = expenseDate.getDate()
-        dailyExpenses[day] += expense.amount
-      }
-    })
+        const expenseDate = new Date(expense.date)
+        if (expenseDate.getFullYear() === year && expenseDate.getMonth() === month) {
+          const day = expenseDate.getDate()
+          dailyExpenses[day] += expense.amount
+        }
+      })
     }
-    
     return dailyExpenses
   }
 
-  // 获取月份的第一天是星期几
   const getFirstDayOfWeek = () => {
     const year = currentDate.getFullYear()
     const month = currentDate.getMonth()
     return new Date(year, month, 1).getDay()
   }
 
-  // 生成日历数据
   const generateCalendarData = () => {
     const year = currentDate.getFullYear()
     const month = currentDate.getMonth()
@@ -186,15 +154,10 @@ const Statistics = () => {
     const firstDayOfWeek = getFirstDayOfWeek()
     const dailyExpenses = getDailyExpenses()
     const today = new Date()
-    
     const calendarData: Array<{ day: number; amount: number; isEmpty: boolean; isToday: boolean }> = []
-    
-    // 添加空白天数（上个月的尾部）
     for (let i = 0; i < firstDayOfWeek; i++) {
       calendarData.push({ day: 0, amount: 0, isEmpty: true, isToday: false })
     }
-    
-    // 添加当月的天数
     for (let day = 1; day <= daysInMonth; day++) {
       const isToday = today.getFullYear() === year && today.getMonth() === month && today.getDate() === day
       calendarData.push({
@@ -204,7 +167,6 @@ const Statistics = () => {
         isToday
       })
     }
-    
     return calendarData
   }
 
@@ -217,7 +179,6 @@ const Statistics = () => {
     return `${amount > 0 ? '-' : ''}￥${amount.toFixed(2)}`
   }
 
-  // 根据支出金额获取颜色深浅
   const getExpenseColor = (amount: number) => {
     if (amount === 0) return 'transparent'
     const maxExpense = Math.max(...Object.values(getDailyExpenses()))
@@ -235,9 +196,7 @@ const Statistics = () => {
 
   return (
     <View className='statistics-container'>
-      {/* 页面头部 */}
       <View className='page-header'>
-          {/* 月份选择器 */}
         <View className='month-selector'>
           <Button className='nav-btn' onClick={() => changeMonth(-1)}>
             <Text className='nav-icon'>‹</Text>
@@ -249,7 +208,6 @@ const Statistics = () => {
             <Text className='nav-icon'>›</Text>
           </Button>
         </View>
-        {/* <Text className='header-title'>Statistics</Text> */}
         <View className='header-summary'>
           <View className='summary-card'>
             <Text className='summary-label'>总支出</Text>
@@ -267,16 +225,11 @@ const Statistics = () => {
       </View>
 
       <View className='main-content'>
-      
-
-        {/* 日历卡片 */}
         <View className='calendar-card'>
           <View className='card-header'>
             <Text className='card-title'>支出日历</Text>
           </View>
-          
           <View className='calendar-grid'>
-            {/* 星期标题 */}
             <View className='weekday'>日</View>
             <View className='weekday'>一</View>
             <View className='weekday'>二</View>
@@ -284,8 +237,6 @@ const Statistics = () => {
             <View className='weekday'>四</View>
             <View className='weekday'>五</View>
             <View className='weekday'>六</View>
-            
-            {/* 日历日期 */}
             {generateCalendarData().map((dayData, index) => (
               <View 
                 key={index} 
@@ -305,7 +256,7 @@ const Statistics = () => {
                     <Text className={`day-number ${dayData.isToday ? 'today-number' : ''}`}>{dayData.day}</Text>
                     {dayData.amount > 0 && (
                       <View className='expense-indicator'>
-                        <Text className={`day-amount ${dayData.isToday ? 'today-amount' : ''}`}>{formatCurrency(dayData.amount)}</Text>
+                        <Text className={`day-amount ${dayData.isToday ? 'today-amount' : ''}`}>{dayData.amount.toFixed(2)}</Text>
                       </View>
                     )}
                   </>
@@ -315,7 +266,6 @@ const Statistics = () => {
           </View>
         </View>
 
-        {/* 分类统计卡片 */}
         {monthlyData.categories.length > 0 ? (
           <View className='categories-card'>
             <View className='card-header' onClick={() => {
@@ -324,16 +274,15 @@ const Statistics = () => {
               goList(`${year}-${month}`);
             }}>
               <Text className='card-title'>{currentDate.getMonth() + 1}月分类统计</Text>
-             {monthlyData.categories.length > 0 && (
-               <view className='card-label'>明细列表<Image src={arrowIcon} className='arrow-icon' /></view>
-             )}
+              {monthlyData.categories.length > 0 && (
+                <View className='card-label'>明细列表<Image src={arrowIcon} className='arrow-icon' /></View>
+              )}
             </View>
             <View className='categories-list'>
               {monthlyData.categories.map((category, index) => (
-                <View key={index} className='category-item' animation={`fadeInUp ${index * 0.1 + 0.3}s ease-out`}>
+                <View key={index} className='category-item'>
                   <View className='category-header'>
                     <View className='category-info'>
-                      {/* <View className='category-dot' style={{ backgroundColor: category.color }}></View> */}
                       <Text className='category-name'>{category.name}</Text>
                     </View>
                     <View className='category-stats'>
@@ -363,7 +312,6 @@ const Statistics = () => {
         )}
       </View>
 
-      {/* 月份选择器 */}
       <DatePicker
         visible={showDatePicker}
         value={currentDate}
