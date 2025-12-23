@@ -36,14 +36,14 @@ const List = () => {
     return get('/expense/list?month=' + dateStr + '&sort=' + sortType).then(res => {
       console.log('获取指定日期账单:', res);
       let expenses = res || [];
-      // 如果传入的是完整日期格式，前端过滤只显示该日的记录
-      if (dateStr.length === 10 && dateStr.includes('-')) {
-        expenses = expenses.filter((item: any) => {
-          // 确保日期格式一致
-          const itemDate = new Date(item.date).toISOString().split('T')[0];
-          return itemDate === dateStr;
-        });
-      }
+      // // 如果传入的是完整日期格式，前端过滤只显示该日的记录
+      // if (dateStr.length === 10 && dateStr.includes('-')) {
+      //   expenses = expenses.filter((item: any) => {
+      //     // 确保日期格式一致
+      //     const itemDate = new Date(item.date).toISOString().split('T')[0];
+      //     return itemDate === dateStr;
+      //   });
+      // }
       setExpenseList(expenses);
     }).catch(err => {
       console.error('获取账单失败:', err);
@@ -67,9 +67,7 @@ const List = () => {
     return dateStr;
   };
 
-  const sortedExpenses = [...expenseList].sort((a: any, b: any) =>
-    sortType === 'asc' ? Number(a.amount) - Number(b.amount) : Number(b.amount) - Number(a.amount)
-  )
+
 
   return (
     <View className='list-container'>
@@ -80,9 +78,9 @@ const List = () => {
           最大开销
         </p>
       </View>
-      {sortedExpenses.length > 0 ? (
+      {expenseList.length > 0 ? (
         <View className='records-list'>
-          {sortedExpenses.map((item, index) => (
+          {expenseList.map((item, index) => (
             <View className='record-item fadeInUp' key={item.id} style={{ animationDelay: `${index * 0.1 + 0.3}s` }}>
               {/* <View className='record-icon-wrapper'>
                 <View className='record-icon'>💳</View>

@@ -73,9 +73,16 @@ const Accounting = () => {
     setLoading(true)
     try {
       // 发送记账数据到接口
+      let sendDate = selectedDate;
+      // 判断是否是今天
+      const today = new Date().toISOString().split('T')[0];
+      if (selectedDate === today) {
+        // 如果是今天，添加当前时间（时分秒）
+        sendDate = new Date().toISOString();
+      }
       const res =await post('/expense', {
          rawText:description,
-         date:selectedDate
+         date:sendDate
       })
       console.log('记账接口返回:', res)
       Taro.showToast({
