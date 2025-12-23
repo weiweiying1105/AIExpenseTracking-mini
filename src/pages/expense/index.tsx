@@ -74,7 +74,8 @@ const Accounting = () => {
     try {
       // 发送记账数据到接口
       const res =await post('/expense', {
-         rawText:description
+         rawText:description,
+         date:selectedDate
       })
       console.log('记账接口返回:', res)
       Taro.showToast({
@@ -175,7 +176,7 @@ const Accounting = () => {
                     <Text className='record-desc'>{item.description}</Text>
                     <Text className='record-date'>{formatDate(new Date(item.date), 'HH:mm')}</Text>
                   </View>
-                  <Text className='record-amount'>-￥{item?.amount?.toFixed(2) || '0.00'}</Text>
+                  <Text className='record-amount'>-￥{item?.amount || '0.00'}</Text>
                 </View>
               ))}
             </View>
