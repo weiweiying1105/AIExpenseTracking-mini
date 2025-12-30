@@ -5,7 +5,14 @@ import { get, post } from '../../utils/request'
 import { eventBus, EVENT_NAMES } from '../../utils/eventBus'
 import './index.less'
 import { formatDate } from 'src/utils/date'
+import { definePageConfig } from '@tarojs/taro'
 
+ definePageConfig({
+  navigationBarTitleText: '记账',
+  enablePullDownRefresh: true,
+  backgroundColor: '#f5f5f5',
+  backgroundTextStyle: 'dark'
+})
 const Accounting = () => {
   const [amount, setAmount] = useState('')
   const [description, setDescription] = useState('')
@@ -77,8 +84,15 @@ const Accounting = () => {
       // 判断是否是今天
       const today = new Date().toISOString().split('T')[0];
       if (selectedDate === today) {
-        // 如果是今天，添加当前时间（时分秒）
-        sendDate = new Date().toISOString();
+        // 如果是今天，添加当前时间（使用本地时间，避免时区问题）
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        sendDate = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
       }
       const res =await post('/expense', {
          rawText:description,

@@ -325,4 +325,11 @@ const Statistics = () => {
   )
 }
 
+definePageConfig({
+  navigationBarTitleText: '统计',
+  enablePullDownRefresh: true,
+  backgroundColor: '#f5f5f5',
+  backgroundTextStyle: 'dark'
+})
+
 export default Statistics
