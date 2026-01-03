@@ -169,14 +169,8 @@ const Statistics = () => {
     }
     return calendarData
   }
-
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr)
-    return `${date.getMonth() + 1}月${date.getDate()}日`
-  }
-
   const formatCurrency = (amount: number) => {
-    return `${amount > 0 ? '-' : ''}￥${amount.toFixed(2)}`
+    return `-${amount.toFixed(2)}`
   }
 
   const getExpenseColor = (amount: number) => {
