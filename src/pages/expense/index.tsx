@@ -1,4 +1,4 @@
-import { View, Text, Button, Input, Textarea, Picker } from '@tarojs/components'
+import { View, Text, Button, Input, Textarea, Picker, Image } from '@tarojs/components'
 import Taro, { useDidShow, usePullDownRefresh } from '@tarojs/taro'
 import { useEffect, useState } from 'react'
 import { get, post } from '../../utils/request'
@@ -22,7 +22,7 @@ const Accounting = () => {
   const [summary, setSummary] = useState<{
     totalAmount: number
   }>()
-  
+
   // 下啦刷新（通过 hook 绑定事件）
   usePullDownRefresh(() => {
     getExpenseListByDate(selectedDate)
@@ -39,14 +39,14 @@ const Accounting = () => {
     const handleLoginSuccess = () => {
       getExpenseListByDate(selectedDate)
     }
-    
+
     const handleTokenUpdated = () => {
       getExpenseListByDate(selectedDate)
     }
 
     eventBus.on(EVENT_NAMES.LOGIN_SUCCESS, handleLoginSuccess)
     eventBus.on(EVENT_NAMES.TOKEN_UPDATED, handleTokenUpdated)
-    
+
     return () => {
       eventBus.off(EVENT_NAMES.LOGIN_SUCCESS, handleLoginSuccess)
       eventBus.off(EVENT_NAMES.TOKEN_UPDATED, handleTokenUpdated)
@@ -94,9 +94,9 @@ const Accounting = () => {
         const seconds = String(now.getSeconds()).padStart(2, '0');
         sendDate = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
       }
-      const res =await post('/expense', {
-         rawText:description,
-         date:sendDate
+      const res = await post('/expense', {
+        rawText: description,
+        date: sendDate
       })
       console.log('记账接口返回:', res)
       Taro.showToast({
@@ -121,7 +121,7 @@ const Accounting = () => {
   return (
     <View className='accounting-container'>
       {/* 页面头部 */}
-   {/*    <View className='page-header'>
+      {/*    <View className='page-header'>
         {summary && (
           <View className='header-summary'>
             <Text className='summary-label'>今日总支出</Text>
@@ -143,13 +143,13 @@ const Accounting = () => {
             onChange={(e) => setSelectedDate(e.detail.value)}
           >
             <View className='date-picker'>
-              <Text className='date-icon'>📅</Text>
+              <Image src='https://ai-comment-1303796882.cos.ap-shanghai.myqcloud.com/uploads/1770037770854-6be8f2ccce551.png' className='date-icon-image' />
               <Text className='date-text'>{selectedDate}</Text>
               <Text className='date-arrow'>›</Text>
             </View>
           </Picker>
         </View>
-        
+
         {/* 表单卡片 */}
         <View className='form-card'>
           <View className='card-header'>
@@ -168,8 +168,8 @@ const Accounting = () => {
               />
             </View>
 
-            <Button 
-              className='submit-btn' 
+            <Button
+              className='submit-btn'
               onClick={handleSubmit}
               loading={loading}
               disabled={loading}
@@ -183,9 +183,9 @@ const Accounting = () => {
         <View className='records-section'>
           <View className='section-header'>
             <Text className='section-title'>今日交易</Text>
-            <Text className='record-count'>总支出{summary?.totalAmount&&summary?.totalAmount>0?'-':''}￥{summary?.totalAmount?.toFixed(2) || '0.00'}</Text>
+            <Text className='record-count'>总支出￥{summary?.totalAmount?.toFixed(2) || '0.00'}</Text>
           </View>
-          
+
           {expenseList.length > 0 ? (
             <View className='records-list'>
               {expenseList.map((item, index) => (

@@ -1,8 +1,8 @@
 import { View, Text, Image } from '@tarojs/components'
 import { useState, useEffect } from 'react'
 import Taro, { useDidShow, usePullDownRefresh } from '@tarojs/taro'
-import { 
-  Button, 
+import {
+  Button,
   DatePicker
 } from '@nutui/nutui-react-taro'
 import { get } from '../../utils/request'
@@ -98,7 +98,7 @@ const Statistics = () => {
         totalExpense,
         totalIncome: 0,
         expenseCount: res.expenses ? res.expenses.length : 0,
-        avgDaily: totalExpense / daysInMonth,
+        avgDaily: Math.round(totalExpense / daysInMonth),
         categories,
         expenses: res.expenses || []
       })
@@ -205,11 +205,11 @@ const Statistics = () => {
         <View className='header-summary'>
           <View className='summary-card'>
             <Text className='summary-label'>总支出</Text>
-            <Text className='summary-value'>{formatCurrency(monthlyData.totalExpense)}</Text>
+            <Text className='summary-value'>¥{monthlyData.totalExpense}</Text>
           </View>
           <View className='summary-card'>
             <Text className='summary-label'>日均</Text>
-            <Text className='summary-value'>{formatCurrency(monthlyData.avgDaily)}</Text>
+            <Text className='summary-value'>¥{monthlyData.avgDaily}</Text>
           </View>
           <View className='summary-card'>
             <Text className='summary-label'>笔数</Text>
@@ -232,8 +232,8 @@ const Statistics = () => {
             <View className='weekday'>五</View>
             <View className='weekday'>六</View>
             {generateCalendarData().map((dayData, index) => (
-              <View 
-                key={index} 
+              <View
+                key={index}
                 className={`calendar-day ${dayData.isEmpty ? 'empty' : ''} ${dayData.isToday ? 'today' : ''} ${dayData.amount > 0 ? 'has-expense' : ''}`}
                 onClick={() => {
                   if (!dayData.isEmpty) {
@@ -285,8 +285,8 @@ const Statistics = () => {
                     </View>
                   </View>
                   <View className='category-progress'>
-                    <View 
-                      className='progress-fill' 
+                    <View
+                      className='progress-fill'
                       style={{
                         width: `${category.percentage}%`,
                         backgroundColor: category.color
