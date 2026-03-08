@@ -7,7 +7,7 @@ import './index.less'
 import { formatDate } from 'src/utils/date'
 import { definePageConfig } from '@tarojs/taro'
 
- definePageConfig({
+definePageConfig({
   navigationBarTitleText: '记账',
   enablePullDownRefresh: true,
   backgroundColor: '#f5f5f5',
@@ -57,11 +57,12 @@ const Accounting = () => {
   // useDidShow(() => {
   //   getExpenseListByDate(selectedDate)
   // })
-  const getExpenseListByDate = async (date: string) => {
+  const getExpenseListByDate = async (date: string, bypassCache: boolean = false) => {
     const start = date
     const end = date
-    // 获取指定日期的支出
-    get('/expense/range?startDate=' + start + '&endDate=' + end).then(res => {
+    // 获取指定日期的支出（可选择绕过缓存）
+    const url = `/expense/range?startDate=${start}&endDate=${end}${bypassCache ? '&bypassCache=1' : ''}`
+    get(url).then(res => {
       console.log('获取指定日期账单:', res)
       setExpenseList(res.expenses)
       setSummary(res.summary)
@@ -103,7 +104,7 @@ const Accounting = () => {
         title: '记账成功',
         icon: 'success'
       })
-      getExpenseListByDate(selectedDate)
+      getExpenseListByDate(selectedDate, true)
       // 清空表单
       setAmount('')
       setDescription('')
