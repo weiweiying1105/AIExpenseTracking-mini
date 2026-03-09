@@ -7,7 +7,7 @@
  * @FilePath: \AIExpenseTracking-mini\src\pages\login\index.tsx
  */
 import React, { useState, useEffect } from 'react'
-import { View, Button, Text, Image } from '@tarojs/components'
+import { View, Button, Text, Image, Checkbox } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { eventBus, EVENT_NAMES } from '../../utils/eventBus'
 import './index.less'
@@ -16,6 +16,7 @@ import { callLoginApi } from '../../api/user'
 
 const Login: React.FC = () => {
   const [loading, setLoading] = useState(false)
+  const [agreed, setAgreed] = useState(false)
 
   useEffect(() => {
     // 检查是否已经登录
@@ -40,6 +41,16 @@ const Login: React.FC = () => {
   // 微信登录（不获取用户信息）
   const handleWxLogin = async () => {
     if (loading) return
+
+    // 检查是否同意协议
+    if (!agreed) {
+      Taro.showToast({
+        title: '请先同意隐私政策和用户协议',
+        icon: 'none',
+        duration: 2000
+      })
+      return
+    }
 
     setLoading(true)
 
@@ -113,7 +124,7 @@ const Login: React.FC = () => {
             className='authorize-btn'
             onClick={handleWxLogin}
             loading={loading}
-            disabled={loading}
+            disabled={loading || !agreed}
           >
             <View className='btn-content'>
               <Text className='btn-text'>{loading ? '授权中...' : '微信一键登录'}</Text>
@@ -123,12 +134,20 @@ const Login: React.FC = () => {
       </View>
       
       <View className='footer'>
-        <Text className='footer-text'>
-          登录即表示同意
-          <Text className='agreement-link' onClick={() => Taro.navigateTo({ url: '/pages/privacy-policy/index' })}>《隐私政策》</Text>
-          和
-          <Text className='agreement-link' onClick={() => Taro.navigateTo({ url: '/pages/user-agreement/index' })}>《用户协议》</Text>
-        </Text>
+        <View className='agreement-row'>
+          <Checkbox
+            className='agreement-checkbox'
+            value='agreement'
+            checked={agreed}
+            onClick={() => setAgreed(!agreed)}
+          />
+          <Text className='footer-text'>
+            我已阅读并同意
+            <Text className='agreement-link' onClick={() => Taro.navigateTo({ url: '/pages/privacy-policy/index' })}>《隐私政策》</Text>
+            和
+            <Text className='agreement-link' onClick={() => Taro.navigateTo({ url: '/pages/user-agreement/index' })}>《用户协议》</Text>
+          </Text>
+        </View>
       </View>
     </View>
   )
